@@ -6,8 +6,8 @@ import javafx.scene.paint.Color;
 public class Ball extends MovableObject {
     public Ball(double x, double y, double radius) {
         super(x, y, radius*2, radius*2); // đường kính
-        this.dx = 2; // tốc độ ban đầu
-        this.dy = -2;
+        this.dx = 2.5; // tốc độ ban đầu
+        this.dy = -2.5;
     }
     @Override
     public void render(GraphicsContext gc) {
