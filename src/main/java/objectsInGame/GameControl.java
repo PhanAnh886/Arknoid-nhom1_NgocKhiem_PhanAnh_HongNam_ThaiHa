@@ -3,7 +3,7 @@ package objectsInGame;
 import javafx.animation.AnimationTimer;      // Tạo vòng lặp game
 import javafx.scene.canvas.Canvas;           // Mặt vẽ
 import javafx.scene.canvas.GraphicsContext;  // Dụng cụ vẽ
-import javafx.scene.layout.Pane;             // Khung chứa
+import javafx.scene.layout.Pane;             // Khung chứa, để dán lên
 import javafx.scene.paint.Color;             // Màu sắc
 import java.util.ArrayList;                  // Danh sách gạch
 
