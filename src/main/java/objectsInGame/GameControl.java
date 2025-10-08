@@ -1,91 +1,100 @@
 package objectsInGame;
 
-import javafx.animation.AnimationTimer;      // Tạo vòng lặp game
-import javafx.scene.canvas.Canvas;           // Mặt vẽ
-import javafx.scene.canvas.GraphicsContext;  // Dụng cụ vẽ
-import javafx.scene.layout.Pane;             // Khung chứa, để dán lên
-import javafx.scene.paint.Color;             // Màu sắc
-import java.util.ArrayList;                  // Danh sách gạch
+import javafx.animation.AnimationTimer;      //tạo vòng lặp game
+import javafx.scene.canvas.Canvas;           //mặt vẽ
+import javafx.scene.canvas.GraphicsContext;  //dụng cụ vẽ
+import javafx.scene.layout.Pane;             //khung chứa, để dán lên
+import javafx.scene.paint.Color;             //màu sắc
 
-    public class GameControl extends Pane {
-        private Canvas canvas;
-        private GraphicsContext gc;
+import java.util.ArrayList;                  //danh sách gạch
 
-        private Paddle paddle;
-        private Ball ball;
-        private ArrayList<Brick> bricks = new ArrayList<>();
+/**
+ * class điều khiển game
+ */
+public class GameControl extends Pane {
+    private Canvas canvas;
+    private GraphicsContext gc;
 
-        private AnimationTimer loop;
+    private Paddle paddle;
+    private Ball ball;
+    private ArrayList<Brick> bricks = new ArrayList<>();
 
-        public GameControl() {
-            canvas = new Canvas(500, 500);
-            gc = canvas.getGraphicsContext2D();
-            this.getChildren().add(canvas);
+    private AnimationTimer loop;
 
-            // Khởi tạo đối tượng
-            paddle = new Paddle(200, 450, 80, 20);
-            ball = new Ball(240, 300, 15);
+    /**
+     * hàm control game chính
+     */
+    public GameControl() {
+        canvas = new Canvas(1000, 600);
+        gc = canvas.getGraphicsContext2D();
+        this.getChildren().add(canvas);
 
-            // Tạo gạch
-            int x1 = 10;
-            int y1 = 50;
-            int width = 55;
-            int height = 25;
+        // khởi tạo đối tượng
+        paddle = new Paddle(400, 500, 160, 20);
+        ball = new Ball(480, 360, 17);
 
-            for (int i = 0; i < 32; i++) {
-                bricks.add(new Brick(x1 + (i % 8) * 60, y1, width, height));
+        // tạo gạch
+        int x1 = 10;
+        int y1 = 50;
+        int width = 55;
+        int height = 25;
 
-                // Khi đủ 8 viên thì xuống hàng
-                if ((i + 1) % 8 == 0) {
-                    y1 += 30;  // Tăng y để vẽ hàng mới
-                }
+        for (int i = 0; i < 80; i++) {
+            bricks.add(new Brick(x1 + (i % 16) * 60, y1, width, height));
+
+            // khi đủ 16 viên thì xuống hàng
+            if ((i + 1) % 16 == 0) {
+                y1 += 30;  //tăng y để vẽ hàng mới
             }
-
-            // Khởi động vòng lặp game
-            startGameLoop();
         }
 
-        /** Vòng lặp game chính */
-        private void startGameLoop() {
-
-            loop = new AnimationTimer() {
-                @Override
-                public void handle(long now) {
-                    double dt = 1/60;
-                    update(dt);
-                    renderAll();
-                }
-            };
-            loop.start();
-        }
-
-        /** Cập nhật logic game */
-        private void update(double dt) {
-            // Gọi đúng phương thức update() của bạn
-            ball.update(dt);
-            paddle.update(dt);
-        }
-
-        /** Vẽ lại frame */
-        private void renderAll() {
-            gc.setFill(Color.LIGHTGRAY);
-            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-            // Vẽ bricks
-            gc.setFill(Color.ORANGE);
-            for (Brick brick : bricks) {
-                if (!brick.isDestroyed()) {
-                    gc.fillRect(brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight());
-                }
-            }
-
-            // Vẽ paddle
-            gc.setFill(Color.BLUE);
-            gc.fillRect(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight());
-
-            // Vẽ ball
-            gc.setFill(Color.RED);
-            gc.fillOval(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight());
-        }
+        // khởi động vòng lặp game
+        startGameLoop();
     }
+
+    /**
+     * vòng lặp game
+     */
+    void startGameLoop() {
+        loop = new AnimationTimer() {
+            @Override
+            public void handle(long now) { //gọi mỗi frame
+                double dt = 1.0 / 60.0;
+                update(dt);
+                renderAll();
+            }
+        };
+        loop.start();
+    }
+
+    /**
+     * cập nhật logic game
+     *
+     * @param dt 1/60 s
+     */
+    private void update(double dt) {
+        // cập nhập trạng thái( mới ở giai đoạn hiển thị trên màn hình, ch có va chạm hay di chuyển gì cả)
+        ball.update(dt);
+        paddle.update(dt);
+    }
+
+    /**
+     * vẽ lại frame
+     *
+     */
+    private void renderAll() {
+        // set màu nền
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        // vẽ bricks,paddle,ball
+        for (Brick brick : bricks) {
+            if (!brick.isDestroyed()) {
+                brick.render(gc);
+            }
+        }
+        paddle.render(gc);
+        ball.render(gc);
+    }
+}
 
