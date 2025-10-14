@@ -37,6 +37,9 @@ public class Brick extends GameObject {
         return destroyed;
     }
 
+    public void setDestroyed(boolean value) {
+        this.destroyed = value;
+    }
     /**
      * hàm vẽ lên canvas
      *

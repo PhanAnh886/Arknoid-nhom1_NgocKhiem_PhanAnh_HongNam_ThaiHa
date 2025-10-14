@@ -24,12 +24,9 @@ public class Paddle extends MovableObject {
     /**
      * cập nhập paddle(mới tạo cho có chứ ch cho nhận hành động từ chuột, phím)
      *
-     * @param dt fps 60 nên truyền vào 1/60s
      */
-    @Override
-    public void update(double dt) {
-        super.update(dt);
-        // clamp trong khung
+    public void update() {
+        // giới hạn trong khung
         if (x < minX) x = minX;
         if (x + width > maxX) x = maxX - width;
     }
@@ -54,5 +51,12 @@ public class Paddle extends MovableObject {
     public void setBounds(double minX, double maxX) {
         this.minX = minX;
         this.maxX = maxX;
+    }
+
+    public void resetPaddle(boolean setSpawnBall) {
+        if(setSpawnBall) {
+            setX(420);
+            setY(500);
+        }
     }
 }
