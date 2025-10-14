@@ -5,7 +5,8 @@ import javafx.scene.canvas.Canvas;           //mặt vẽ
 import javafx.scene.canvas.GraphicsContext;  //dụng cụ vẽ
 import javafx.scene.layout.Pane;             //khung chứa, để dán lên
 import javafx.scene.paint.Color;             //màu sắc
-
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;                  //danh sách gạch
 
 /**
@@ -27,11 +28,11 @@ public class GameControl extends Pane {
     public GameControl() {
         canvas = new Canvas(1000, 600);
         gc = canvas.getGraphicsContext2D();
-        this.getChildren().add(canvas);
+        this.getChildren().add(canvas);// thêm node canvas vào node lá Pane
 
         // khởi tạo đối tượng
-        paddle = new Paddle(400, 500, 160, 20);
-        ball = new Ball(480, 360, 17);
+        paddle = new Paddle(420, 500, 160, 20);
+        ball = new Ball(500-17, 500-34, 17);
 
         // tạo gạch
         int x1 = 10;
@@ -47,6 +48,30 @@ public class GameControl extends Pane {
                 y1 += 30;  //tăng y để vẽ hàng mới
             }
         }
+
+        canvas.setOnMouseMoved(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                double mouseX = event.getX();
+
+                // paddle luôn đi theo chuột
+                paddle.setX(mouseX - paddle.getWidth() / 2);
+
+                // nếu bóng chưa phóng thì đi theo luôn
+                if (!ball.isLaunched()) {
+                    ball.setX(mouseX - ball.getWidth() / 2);
+                    ball.setX(Math.min(1000- paddle.getWidth()/2-17,Math.max(ball.getX(),paddle.getWidth()/2-17)));
+                }
+            }
+        });
+
+        // Sự kiện click chuột -> phóng bóng
+        canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ball.setLaunched(true); // đánh dấu là bóng bắt đầu bay
+            }
+        });
 
         // khởi động vòng lặp game
         startGameLoop();
@@ -74,8 +99,8 @@ public class GameControl extends Pane {
      */
     private void update(double dt) {
         // cập nhập trạng thái( mới ở giai đoạn hiển thị trên màn hình, ch có va chạm hay di chuyển gì cả)
-        ball.update(dt);
-        paddle.update(dt);
+        ball.update(dt,paddle,bricks);
+        paddle.update();
     }
 
     /**

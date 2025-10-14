@@ -14,7 +14,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // GameControl là lớp chứa toàn bộ logic game và khung vẽ
-        GameControl game = new GameControl();
+        GameControl game = new GameControl(); // GameControl đc xem là 1 Pane
 
         // khởi tạo scene
         Scene scene = new Scene(game);
