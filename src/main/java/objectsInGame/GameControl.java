@@ -7,6 +7,8 @@ import javafx.scene.layout.Pane;             //khung chứa, để dán lên
 import javafx.scene.paint.Color;             //màu sắc
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;               // font cho chữ
+import javafx.application.Platform;          // Để đóng ứng dụng
 import java.util.ArrayList;                  //danh sách gạch
 
 /**
@@ -22,6 +24,9 @@ public class GameControl extends Pane {
 
     private AnimationTimer loop;
 
+    private int score = 0;
+    private int lives = 3;
+    private int highScore = 0;
     /**
      * hàm control game chính
      */
@@ -101,6 +106,64 @@ public class GameControl extends Pane {
         // cập nhập trạng thái( mới ở giai đoạn hiển thị trên màn hình, ch có va chạm hay di chuyển gì cả)
         ball.update(dt,paddle,bricks);
         paddle.update();
+
+        if (ball.getY() + ball.getHeight() >= 600 && ball.isLaunched()) {
+            lives--; // Giảm mạng
+            if (lives > 0) {
+                // Reset bóng nếu còn mạng
+                ball.ballLose();
+            } else {
+                // Cập nhật highscore khi game over
+                if (score > highScore) {
+                    highScore = score;
+                }
+                // dừng vòng lặp game và đóng game sau 2 giây
+                loop.stop();
+
+                // Hiển thị thông báo game over trong 2 giây rồi đóng ứng dụng
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(2000); // Chờ 2 giây
+                        Platform.exit(); // Đóng ứng dụng JavaFX        
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+            }
+        }
+
+
+        // Kiểm tra phá hết gạch
+        boolean allDestroyed = true;
+        for (Brick brick : bricks) {
+            if (!brick.isDestroyed()) {
+                allDestroyed = false;
+                break;
+            }
+        }
+        if (allDestroyed && lives > 0) {
+            if (score > highScore) {
+                highScore = score;
+            }
+            // Reset tất cả gạch để chơi level mới
+            for (Brick brick : bricks) {
+                brick.setDestroyed(false);
+            }
+            ball.ballLose();
+        }
+        for (Brick brick : bricks) {
+            if (!brick.isDestroyed() && ball.intersects(brick)) {
+                brick.setDestroyed(true);
+                score += 10; // Tăng điểm khi phá gạch
+
+                // Cập nhật highscore ngay khi có điểm mới lớn hơn highscore
+                if (score > highScore) {
+                    highScore = score;
+                }
+                break;
+            }
+        }
+
     }
 
     /**
@@ -120,6 +183,36 @@ public class GameControl extends Pane {
         }
         paddle.render(gc);
         ball.render(gc);
+
+        // Hiển thị game over nếu hết mạng
+        if (lives <= 0) {
+            gc.setFill(Color.RED);
+            gc.setFont(new Font("Arial", 40));
+            gc.fillText("GAME OVER", 400, 300);
+
+            gc.setFill(Color.YELLOW);
+            gc.setFont(new Font("Arial", 24));
+            gc.fillText("Highscore: " + highScore, 420, 350);
+            gc.fillText("Click để chơi lại", 420, 390);
+        }
+
+        // Hiển thị thông báo level up
+        boolean allDestroyed = true;
+        for (Brick brick : bricks) {
+            if (!brick.isDestroyed()) {
+                allDestroyed = false;
+                break;
+            }
+        }
+        if (allDestroyed && lives > 0) {
+            gc.setFill(Color.GREEN);
+            gc.setFont(new Font("Arial", 40));
+            gc.fillText("NEXT LEVEL!", 420, 300);
+            gc.setFont(new Font("Arial", 24));
+            gc.fillText("Điểm hiện tại: " + score, 420, 350);
+            gc.fillText("Click để tiếp tục", 420, 390);
+        }
     }
+
 }
 
