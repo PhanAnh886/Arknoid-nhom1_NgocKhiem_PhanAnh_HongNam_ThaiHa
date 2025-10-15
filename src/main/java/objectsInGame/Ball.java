@@ -48,13 +48,13 @@ public class Ball extends MovableObject {
         double cx = x + width / 2; // tọa độ tâm x,y
         double cy = y + height / 2;
         double r = width / 2;
-
+        //lấy vị trí gần tâm x,y nhất
         double closestX = Math.max(brick.getX(), Math.min(cx, brick.getX() + brick.getWidth()));
         double closestY = Math.max(brick.getY(), Math.min(cy, brick.getY() + brick.getHeight()));
-
+        //khoảng cách đến điểm gàn nhất
         double dx = cx - closestX;
         double dy = cy - closestY;
-
+        //so sánh vs bán kính(py ta go)
         return (dx * dx + dy * dy) <= (r * r);
     }
 
@@ -73,30 +73,30 @@ public class Ball extends MovableObject {
                 setDx(ballSpeed * Math.sin(bounceAngle));
                 setDy(-Math.abs(ballSpeed * Math.cos(bounceAngle))); // bật lên
             }
-            // ---------- (1) CHẠM TƯỜNG TRÁI / PHẢI ----------
-            if (x <= 0) { // bên trái
+
+            if (x <= 0) { //chạm bên trái
                 x = 0;
                 bounceX();
             }
-            else if (x + width >= 1000) { // bên phải
+            else if (x + width >= 1000) { //chạm bên phải
                 x = 1000 - width;
                 bounceX();
             }
 
-            // ---------- (2) CHẠM TRẦN ----------
+            // chạm trần
             if (y <= 0) {
                 y = 0;
                 bounceY();
             }
 
-            // ---------- (3) RƠI XUỐNG DƯỚI (THUA) ----------
+            // roi xuong (thua)
             if (y + height >= 600) {
                 ballLose();// reset bóng về paddle
                 paddle.resetPaddle(ballLose());
                 setClicked(true);
             }
 
-
+            // chạm gạch
             for (Brick brick : bricks) {
                 if (!brick.isDestroyed() && intersects(brick)) {
                     double overlapX = Math.min(x + width - brick.getX(), brick.getX() + brick.getWidth() - x);
