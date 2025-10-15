@@ -10,6 +10,7 @@ import java.util.ArrayList;
  */
 public class Ball extends MovableObject {
     private boolean launched = false;
+    private boolean mouseClicked = true;
     public Ball(double x, double y, double radius) {
         super(x, y, radius * 2, radius * 2); // đường kính
         this.dx = 0; // tốc độ ban đầu
@@ -20,9 +21,15 @@ public class Ball extends MovableObject {
         return launched;
     }
 
+    public void setClicked(boolean clicked) {
+        mouseClicked = clicked;
+    }
     public void setLaunched(boolean value) {
         this.launched = value;
-        this.dy = -250;
+        if(mouseClicked) {
+            this.dy = -250;
+            setClicked(false);
+        }
     }
 
     public void setSpawnBall() {
@@ -86,6 +93,7 @@ public class Ball extends MovableObject {
             if (y + height >= 600) {
                 ballLose();// reset bóng về paddle
                 paddle.resetPaddle(ballLose());
+                setClicked(true);
             }
 
 
@@ -98,6 +106,7 @@ public class Ball extends MovableObject {
                     else bounceY();
 
                     brick.setDestroyed(true);
+                    break;
                 }
             }
 
