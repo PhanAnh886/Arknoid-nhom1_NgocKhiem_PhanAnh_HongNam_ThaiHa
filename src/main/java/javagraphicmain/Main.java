@@ -35,4 +35,3 @@ public class Main extends Application {
         launch(args);
     }
 }
-//phan anh ngu lon
