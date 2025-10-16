@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;        // dùng để đổi mảu background
 import objectsInGame.*;
 /**
  * bắt đầu chương trình
- *
+ *phan anh
  */
 public class Main extends Application {
 
