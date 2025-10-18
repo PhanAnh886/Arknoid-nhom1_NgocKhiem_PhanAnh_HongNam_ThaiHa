@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
  */
 public class Brick extends GameObject {
     private boolean destroyed = false;
+    private boolean scored = false;
 
     /**
      * constructor gạch
@@ -37,9 +38,33 @@ public class Brick extends GameObject {
         return destroyed;
     }
 
+    /**
+     * method set destroyed state for the bricks
+     *
+     * @param value trạng thái
+     */
     public void setDestroyed(boolean value) {
         this.destroyed = value;
     }
+
+    /**
+     * method kiểm tra trạng thái ã tính điểm cho cục brick này chưa
+     *
+     * @return dã check điểm chưa
+     */
+    public boolean isScored() {
+        return scored;
+    }
+
+    /**
+     * method thay đổi trạng thái đã chekc điểm ch(thường truyền vào true để ko tính điểm nx)
+     *
+     * @param value true/false
+     */
+    public void setScored(boolean value) {
+        scored = value;
+    }
+
     /**
      * hàm vẽ lên canvas
      *
