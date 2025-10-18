@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;               // font cho chữ
 import javafx.application.Platform;          // Để đóng ứng dụng
+
 import java.util.ArrayList;                  //danh sách gạch
 
 /**
@@ -24,9 +25,22 @@ public class GameControl extends Pane {
 
     private AnimationTimer loop;
 
-    private int score = 0;
-    private int lives = 3;
-    private int highScore = 0;
+    // thông tin game
+    private int score = 0;            // điểm người chơi
+    private int lives = 3;            // số mạng còn lại
+    private int highScore = 0;        // điểm cao nhất
+
+    // trạng thái game
+    private enum GameState {
+        MENU,       //màn hình menu
+        PLAYING,    // đang chơi
+        GAME_OVER,  // thua hết mạng
+        NEXT_LEVEL  // phá hết gạch
+    }
+
+    private GameState gameState = GameState.MENU;
+    ; // mặc định bắt đầu ở trạng thái menu
+
     /**
      * hàm control game chính
      */
@@ -37,7 +51,7 @@ public class GameControl extends Pane {
 
         // khởi tạo đối tượng
         paddle = new Paddle(420, 500, 160, 20);
-        ball = new Ball(500-17, 500-34, 17);
+        ball = new Ball(500 - 17, 500 - 34, 17);
 
         // tạo gạch
         int x1 = 10;
@@ -54,18 +68,22 @@ public class GameControl extends Pane {
             }
         }
 
+        // sự kiện paddle và bóng di chuyển theo chuột
         canvas.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                double mouseX = event.getX();
+                if (gameState == GameState.PLAYING) {
+                    double mouseX = event.getX();
 
-                // paddle luôn đi theo chuột
-                paddle.setX(mouseX - paddle.getWidth() / 2);
+                    // paddle luôn đi theo chuột
+                    paddle.setX(mouseX - paddle.getWidth() / 2);
 
-                // nếu bóng chưa phóng thì đi theo luôn
-                if (!ball.isLaunched()) {
-                    ball.setX(mouseX - ball.getWidth() / 2);
-                    ball.setX(Math.min(1000- paddle.getWidth()/2-17,Math.max(ball.getX(),paddle.getWidth()/2-17)));
+                    // nếu bóng chưa phóng thì đi theo luôn
+                    if (!ball.isLaunched()) {
+                        ball.setX(mouseX - ball.getWidth() / 2);
+                        //giới hạn ball khi paddle chạm biên ở cả hai đầu
+                        ball.setX(Math.min(1000 - paddle.getWidth() / 2 - ball.width / 2, Math.max(ball.getX(), paddle.getWidth() / 2 - ball.width / 2)));
+                    }
                 }
             }
         });
@@ -74,7 +92,21 @@ public class GameControl extends Pane {
         canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                ball.setLaunched(true); // đánh dấu là bóng bắt đầu bay
+                switch (gameState) {
+                    case MENU:
+                        gameState = GameState.PLAYING;
+                        break;
+                    case PLAYING:
+                        ball.setLaunched(true);
+                        break;
+                    case GAME_OVER:
+                        resetGame();
+                        break;
+
+                    case NEXT_LEVEL:
+                        nextLevel();
+                        break;
+                }
             }
         });
 
@@ -103,67 +135,86 @@ public class GameControl extends Pane {
      * @param dt 1/60 s
      */
     private void update(double dt) {
-        // cập nhập trạng thái( mới ở giai đoạn hiển thị trên màn hình, ch có va chạm hay di chuyển gì cả)
-        ball.update(dt,paddle,bricks);
-        paddle.update();
+        switch (gameState) {
+            case MENU:
+                // Chờ người chơi click để bắt đầu
+                break;
 
-        if (ball.getY() + ball.getHeight() >= 600 && ball.isLaunched()) {
-            lives--; // Giảm mạng
-            if (lives > 0) {
-                // Reset bóng nếu còn mạng
-                ball.ballLose();
-            } else {
-                // Cập nhật highscore khi game over
-                if (score > highScore) {
-                    highScore = score;
-                }
-                // dừng vòng lặp game và đóng game sau 2 giây
-                loop.stop();
+            case PLAYING:
 
-                // Hiển thị thông báo game over trong 2 giây rồi đóng ứng dụng
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(2000); // Chờ 2 giây
-                        Platform.exit(); // Đóng ứng dụng JavaFX        
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+
+                // Kiểm tra phá hết gạch
+                boolean allDestroyed = true;
+                for (Brick brick : bricks) {
+                    if (!brick.isDestroyed()) {
+                        allDestroyed = false;
+                        break;
                     }
-                }).start();
-            }
-        }
-
-
-        // Kiểm tra phá hết gạch
-        boolean allDestroyed = true;
-        for (Brick brick : bricks) {
-            if (!brick.isDestroyed()) {
-                allDestroyed = false;
-                break;
-            }
-        }
-        if (allDestroyed && lives > 0) {
-            if (score > highScore) {
-                highScore = score;
-            }
-            // Reset tất cả gạch để chơi level mới
-            for (Brick brick : bricks) {
-                brick.setDestroyed(false);
-            }
-            ball.ballLose();
-        }
-        for (Brick brick : bricks) {
-            if (!brick.isDestroyed() && ball.intersects(brick)) {
-                brick.setDestroyed(true);
-                score += 10; // Tăng điểm khi phá gạch
-
-                // Cập nhật highscore ngay khi có điểm mới lớn hơn highscore
-                if (score > highScore) {
-                    highScore = score;
                 }
-                break;
-            }
-        }
+                if (allDestroyed) {
+                    gameState = GameState.NEXT_LEVEL;
+                    ball.setLaunched(false);
+                    return;
+                }
 
+                // Nếu bóng rơi khỏi màn hình -> mất mạng
+                if (ball.isLaunched() && ball.getY() + ball.getHeight() >= 600) {
+                    lives--;
+
+                    if (lives <= 0) {
+                        gameState = GameState.GAME_OVER;
+                    } else {
+                        resetState();
+                    }
+                }
+
+
+                for (Brick brick : bricks) {
+                    if (brick.isDestroyed() && !brick.isScored()) {
+                        //brick.setDestroyed(true);
+                        score += 10; // Tăng điểm khi phá gạch
+                        brick.setScored(true); // Đảm bảo chỉ cộng điểm 1 lần
+                        // Cập nhật highscore ngay khi có điểm mới lớn hơn highscore
+                        if (score > highScore) {
+                            highScore = score;
+                        }
+                    }
+                }
+
+                ball.update(dt, paddle, bricks);
+                paddle.update();
+                break;
+
+        }
+    }
+
+    /**
+     * method called when losed+clicked, reset game về trạng thái lcus đầu trừ highscore
+     */
+    private void resetGame() {
+        score = 0;
+        lives = 3;
+        for (Brick brick : bricks) brick.setDestroyed(false);
+        resetState();
+        gameState = GameState.PLAYING;
+    }
+
+    /**
+     * method gộp các object/trạng thái bị reset khi lose game
+     */
+    private void resetState() {
+        ball.ballLose();
+        paddle.resetPaddle(ball.ballLose());
+        ball.setClicked(true);
+    }
+
+    /**
+     * method called when all bricks are broked
+     */
+    private void nextLevel() {
+        for (Brick brick : bricks) brick.setDestroyed(false);
+        ball.ballLose();
+        gameState = GameState.PLAYING;
     }
 
     /**
@@ -171,48 +222,65 @@ public class GameControl extends Pane {
      *
      */
     private void renderAll() {
-        // set màu nền
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        switch (gameState) {
+            case MENU:
+                gc.setFill(Color.BLACK);
+                gc.setFont(new Font("Arial", 48));
+                gc.fillText("ARKANOID", 370, 250); // tiêu đề game
 
-        // vẽ bricks,paddle,ball
-        for (Brick brick : bricks) {
-            if (!brick.isDestroyed()) {
-                brick.render(gc);
-            }
-        }
-        paddle.render(gc);
-        ball.render(gc);
-
-        // Hiển thị game over nếu hết mạng
-        if (lives <= 0) {
-            gc.setFill(Color.RED);
-            gc.setFont(new Font("Arial", 40));
-            gc.fillText("GAME OVER", 400, 300);
-
-            gc.setFill(Color.YELLOW);
-            gc.setFont(new Font("Arial", 24));
-            gc.fillText("Highscore: " + highScore, 420, 350);
-            gc.fillText("Click để chơi lại", 420, 390);
-        }
-
-        // Hiển thị thông báo level up
-        boolean allDestroyed = true;
-        for (Brick brick : bricks) {
-            if (!brick.isDestroyed()) {
-                allDestroyed = false;
+                gc.setFont(new Font("Arial", 24));
+                gc.fillText("Click chhuột để bắt đầu", 390, 320);
+                gc.setFont(new Font("Arial", 20));
+                gc.fillText("Điều khiển: Di chuột để di chuyển thanh đỡ", 310, 370);
+                gc.fillText("Phá hết gạch để qua màn!", 390, 400);
                 break;
-            }
-        }
-        if (allDestroyed && lives > 0) {
-            gc.setFill(Color.GREEN);
-            gc.setFont(new Font("Arial", 40));
-            gc.fillText("NEXT LEVEL!", 420, 300);
-            gc.setFont(new Font("Arial", 24));
-            gc.fillText("Điểm hiện tại: " + score, 420, 350);
-            gc.fillText("Click để tiếp tục", 420, 390);
+
+            case PLAYING:
+                // set màu nền
+                gc.setFill(Color.BLACK);
+                gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+                // vẽ bricks,paddle,ball
+                for (Brick brick : bricks) {
+                    if (!brick.isDestroyed()) {
+                        brick.render(gc);
+                    }
+                }
+                paddle.render(gc);
+                ball.render(gc);
+
+                // điểm số
+                gc.setFill(Color.WHITE);
+                gc.setFont(new Font("Arial", 20));
+                gc.fillText("Score: " + score, 20, 30);
+                gc.fillText("Lives: " + lives, 20, 55);
+                gc.fillText("Highscore: " + highScore, 20, 80);
+                break;
+
+            // Hiển thị game over nếu hết mạng
+            case GAME_OVER:
+                gc.setFill(Color.WHITE);
+                gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                gc.setFill(Color.RED);
+                gc.setFont(new Font("Arial", 40));
+                gc.fillText("GAME OVER", 400, 300);
+
+                gc.setFill(Color.YELLOW);
+                gc.setFont(new Font("Arial", 24));
+                gc.fillText("Highscore: " + highScore, 420, 350);
+                gc.fillText("Click để chơi lại", 420, 390);
+                break;
+
+            // Hiển thị thông báo level up
+            case NEXT_LEVEL:
+                gc.setFill(Color.GREEN);
+                gc.setFont(new Font("Arial", 40));
+                gc.fillText("NEXT LEVEL!", 420, 300);
+                gc.setFont(new Font("Arial", 24));
+                gc.fillText("Điểm hiện tại: " + score, 420, 350);
+                gc.fillText("Click để tiếp tục", 420, 390);
+                break;
         }
     }
-
 }
 

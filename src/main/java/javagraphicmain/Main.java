@@ -5,6 +5,7 @@ import javafx.scene.Scene;              // Màn cảnh hiển thị
 import javafx.stage.Stage;              // Cửa sổ chính của ứng dụng
 import javafx.scene.paint.Color;        // dùng để đổi mảu background
 import objectsInGame.*;
+
 /**
  * bắt đầu chương trình
  *
@@ -28,6 +29,7 @@ public class Main extends Application {
 
     /**
      * start point
+     *
      * @param args nhu binh thuong
      */
     public static void main(String[] args) {
