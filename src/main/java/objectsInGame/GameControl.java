@@ -1,20 +1,24 @@
 package objectsInGame;
 
-import javafx.animation.AnimationTimer;      //tạo vòng lặp game
-import javafx.scene.canvas.Canvas;           //mặt vẽ
-import javafx.scene.canvas.GraphicsContext;  //dụng cụ vẽ
-import javafx.scene.layout.Pane;             //khung chứa, để dán lên
-import javafx.scene.paint.Color;             //màu sắc
+import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Font;               // font cho chữ
-import javafx.application.Platform;          // Để đóng ứng dụng
+import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
-import java.awt.*;
-import java.util.ArrayList;                  //danh sách gạch
+import java.util.ArrayList;
 
 /**
- * class điều khiển game
+ * Class điều khiển game chính
  */
 public class GameControl extends Pane {
     private Canvas canvas;
@@ -25,72 +29,113 @@ public class GameControl extends Pane {
     private ArrayList<Brick> bricks = new ArrayList<>();
 
     private AnimationTimer loop;
-
     private int score = 0;
     private int lives = 3;
     private int highScore = 0;
+
+    // Hình nền và âm thanh
+    private Image backgroundImage;
+    private MediaPlayer bgMusic;
+    private static AudioClip soundBounce, soundBrick, soundLose, soundClick;
+
     /**
-     * hàm control game chính
+     * Hàm khởi tạo game
      */
     public GameControl() {
         canvas = new Canvas(1000, 600);
         gc = canvas.getGraphicsContext2D();
-        this.getChildren().add(canvas);// thêm node canvas vào node lá Pane
+        this.getChildren().add(canvas);
 
-        // khởi tạo đối tượng
+        // Paddle & Ball
         paddle = new Paddle(420, 500, 160, 20);
-        ball = new Ball(500-17, 500-34, 17);
+        ball = new Ball(500 - 17, 500 - 34, 17);
 
-        // tạo gạch
-        int x1 = 10;
-        int y1 = 50;
-        int width = 55;
-        int height = 25;
+        // Khởi tạo âm thanh & hình ảnh
+        initResources();
 
-        for (int i = 0; i < 80; i++) {
-            bricks.add(new Brick(x1 + (i % 16) * 60, y1, width, height));
+        // Tạo danh sách gạch
+        createBricks();
 
-            // khi đủ 16 viên thì xuống hàng
-            if ((i + 1) % 16 == 0) {
-                y1 += 30;  //tăng y để vẽ hàng mới
-            }
-        }
+        // Điều khiển chuột
+        setupMouseControl();
 
-        canvas.setOnMouseMoved(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                double mouseX = event.getX();
-
-                // paddle luôn đi theo chuột
-                paddle.setX(mouseX - paddle.getWidth() / 2);
-
-                // nếu bóng chưa phóng thì đi theo luôn
-                if (!ball.isLaunched()) {
-                    ball.setX(mouseX - ball.getWidth() / 2);
-                    ball.setX(Math.min(1000- paddle.getWidth()/2-17,Math.max(ball.getX(),paddle.getWidth()/2-17)));
-                }
-            }
-        });
-
-        // Sự kiện click chuột -> phóng bóng
-        canvas.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                ball.setLaunched(true); // đánh dấu là bóng bắt đầu bay
-            }
-        });
-
-        // khởi động vòng lặp game
+        // Vòng lặp game
         startGameLoop();
     }
 
     /**
-     * vòng lặp game
+     * Khởi tạo hình ảnh & âm thanh
+     */
+    private void initResources() {
+        try {
+            backgroundImage = new Image(getClass().getResource("/images/background.jpg").toExternalForm());
+        } catch (Exception e) {
+            System.err.println("Không tải được background: " + e.getMessage());
+        }
+
+        try {
+            soundBounce = new AudioClip(getClass().getResource("/sounds/bounce.wav").toExternalForm());
+            soundBrick  = new AudioClip(getClass().getResource("/sounds/brick.wav").toExternalForm());
+            soundLose   = new AudioClip(getClass().getResource("/sounds/lose.wav").toExternalForm());
+            soundClick  = new AudioClip(getClass().getResource("/sounds/click.wav").toExternalForm());
+        } catch (Exception e) {
+            System.err.println("Không tải được âm thanh: " + e.getMessage());
+        }
+
+        try {
+            Media bgm = new Media(getClass().getResource("/sounds/background.mp3").toExternalForm());
+            bgMusic = new MediaPlayer(bgm);
+            bgMusic.setCycleCount(MediaPlayer.INDEFINITE);
+            bgMusic.setVolume(0.35);
+            bgMusic.play();
+        } catch (Exception e) {
+            System.err.println("Không tải được nhạc nền: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Tạo danh sách gạch
+     */
+    private void createBricks() {
+        int x1 = 10, y1 = 50;
+        int width = 55, height = 25;
+
+        for (int i = 0; i < 80; i++) {
+            bricks.add(new Brick(x1 + (i % 16) * 60, y1, width, height));
+            if ((i + 1) % 16 == 0) {
+                y1 += 30;
+            }
+        }
+    }
+
+    /**
+     * Thiết lập chuột
+     */
+    private void setupMouseControl() {
+        canvas.setOnMouseMoved(event -> {
+            double mouseX = event.getX();
+            paddle.setX(mouseX - paddle.getWidth() / 2);
+
+            if (!ball.isLaunched()) {
+                ball.setX(mouseX - ball.getWidth() / 2);
+                ball.setX(Math.min(1000 - paddle.getWidth() / 2 - 17,
+                        Math.max(ball.getX(), paddle.getWidth() / 2 - 17)));
+            }
+        });
+
+        canvas.setOnMouseClicked(event -> {
+            if (soundClick != null) soundClick.play();
+            ball.setLaunched(true);
+        });
+    }
+
+    /**
+     * Bắt đầu vòng lặp game
      */
     void startGameLoop() {
         loop = new AnimationTimer() {
             @Override
-            public void handle(long now) { //gọi mỗi frame
+            public void handle(long now) {
                 double dt = 1.0 / 60.0;
                 update(dt);
                 renderAll();
@@ -100,40 +145,33 @@ public class GameControl extends Pane {
     }
 
     /**
-     * cập nhật logic game
-     *
-     * @param dt 1/60 s
+     * Cập nhật logic
      */
     private void update(double dt) {
-        // cập nhập trạng thái( mới ở giai đoạn hiển thị trên màn hình, ch có va chạm hay di chuyển gì cả)
-        ball.update(dt,paddle,bricks);
+        ball.update(dt, paddle, bricks);
         paddle.update();
 
+        // Bóng rơi xuống -> mất mạng
         if (ball.getY() + ball.getHeight() >= 600 && ball.isLaunched()) {
-            lives--; // Giảm mạng
+            lives--;
+            playLoseSound();
+
             if (lives > 0) {
-                // Reset bóng nếu còn mạng
                 ball.ballLose();
             } else {
-                // Cập nhật highscore khi game over
-                if (score > highScore) {
-                    highScore = score;
-                }
-                // dừng vòng lặp game và đóng game sau 2 giây
+                if (score > highScore) highScore = score;
                 loop.stop();
 
-                // Hiển thị thông báo game over trong 2 giây rồi đóng ứng dụng
                 new Thread(() -> {
                     try {
-                        Thread.sleep(2000); // Chờ 2 giây
-                        Platform.exit(); // Đóng ứng dụng JavaFX        
+                        Thread.sleep(2000);
+                        Platform.exit();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }).start();
             }
         }
-
 
         // Kiểm tra phá hết gạch
         boolean allDestroyed = true;
@@ -143,79 +181,89 @@ public class GameControl extends Pane {
                 break;
             }
         }
+
         if (allDestroyed && lives > 0) {
-            if (score > highScore) {
-                highScore = score;
-            }
-            // Reset tất cả gạch để chơi level mới
-            for (Brick brick : bricks) {
-                brick.setDestroyed(false);
-            }
+            if (score > highScore) highScore = score;
+            for (Brick brick : bricks) brick.setDestroyed(false);
             ball.ballLose();
         }
+
+        // Cập nhật điểm khi phá gạch
         for (Brick brick : bricks) {
             if (!brick.isDestroyed() && ball.intersects(brick)) {
                 brick.setDestroyed(true);
-                score += 10; // Tăng điểm khi phá gạch
+                score += 10;
+                if (soundBrick != null) soundBrick.play();
 
-                // Cập nhật highscore ngay khi có điểm mới lớn hơn highscore
-                if (score > highScore) {
-                    highScore = score;
-                }
+                // Rung nhẹ khi phá gạch
+                shakeCanvas();
                 break;
             }
         }
-
     }
 
     /**
-     * vẽ lại frame
-     *
+     * Rung nhẹ canvas khi phá gạch
+     */
+    private void shakeCanvas() {
+        canvas.setTranslateX(Math.random() * 6 - 3);
+        canvas.setTranslateY(Math.random() * 6 - 3);
+        new Thread(() -> {
+            try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+            Platform.runLater(() -> {
+                canvas.setTranslateX(0);
+                canvas.setTranslateY(0);
+            });
+        }).start();
+    }
+
+    /**
+     * Vẽ toàn bộ frame
      */
     private void renderAll() {
-
-        // set màu nền
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        // vẽ bricks,paddle,ball
-        for (Brick brick : bricks) {
-            if (!brick.isDestroyed()) {
-                brick.render(gc);
-            }
+        if (backgroundImage != null) {
+            gc.drawImage(backgroundImage, 0, 0, canvas.getWidth(), canvas.getHeight());
+        } else {
+            gc.setFill(Color.BLACK);
+            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         }
+
+        for (Brick brick : bricks) {
+            if (!brick.isDestroyed()) brick.render(gc);
+        }
+
         paddle.render(gc);
         ball.render(gc);
 
-        // Hiển thị game over nếu hết mạng
+        // Hiển thị UI
+        gc.setFill(Color.WHITE);
+        gc.setFont(new Font("Arial", 20));
+        gc.fillText("Score: " + score, 20, 25);
+        gc.fillText("Lives: " + lives, 20, 50);
+        gc.fillText("High Score: " + highScore, 850, 25);
+
         if (lives <= 0) {
             gc.setFill(Color.RED);
             gc.setFont(new Font("Arial", 40));
-            gc.fillText("GAME OVER", 400, 300);
-
-            gc.setFill(Color.YELLOW);
-            gc.setFont(new Font("Arial", 24));
-            gc.fillText("Highscore: " + highScore, 420, 350);
-            gc.fillText("Click để chơi lại", 420, 390);
-        }
-
-        // Hiển thị thông báo level up
-        boolean allDestroyed = true;
-        for (Brick brick : bricks) {
-            if (!brick.isDestroyed()) {
-                allDestroyed = false;
-                break;
-            }
-        }
-        if (allDestroyed && lives > 0) {
-            gc.setFill(Color.GREEN);
-            gc.setFont(new Font("Arial", 40));
-            gc.fillText("NEXT LEVEL!", 420, 300);
-            gc.setFont(new Font("Arial", 24));
-            gc.fillText("Điểm hiện tại: " + score, 420, 350);
-            gc.fillText("Click để tiếp tục", 420, 390);
+            gc.fillText("GAME OVER", 380, 300);
         }
     }
 
-}
+    // ===================== ÂM THANH CHUNG ======================
 
+    public static void playBounceSound() {
+        if (soundBounce != null) soundBounce.play();
+    }
+
+    public static void playBrickSound() {
+        if (soundBrick != null) soundBrick.play();
+    }
+
+    public static void playLoseSound() {
+        if (soundLose != null) soundLose.play();
+    }
+
+    public static void playClickSound() {
+        if (soundClick != null) soundClick.play();
+    }
+}

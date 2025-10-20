@@ -1,37 +1,52 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         http://maven.apache.org/maven-v4_0_0.xsd">
-
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.arkanoid</groupId>
+
+    <groupId>org.example</groupId>
     <artifactId>arkanoid-game</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
+        <javafx.version>21.0.2</javafx.version>
+        <javafx.platform>win</javafx.platform>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-bom</artifactId>
+                <version>${javafx.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
-        <!-- JavaFX dependencies -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>17.0.11</version>
+            <classifier>${javafx.platform}</classifier>
         </dependency>
-
         <dependency>
             <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>17.0.11</version>
-            <classifier>win</classifier>
+            <artifactId>javafx-fxml</artifactId>
+            <classifier>${javafx.platform}</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <classifier>${javafx.platform}</classifier>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Plugin để biên dịch bằng JDK 17 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -41,16 +56,12 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin để chạy JavaFX -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>javagraphicmain.Main</mainClass>
-                    <options>
-                        <option>--enable-native-access=ALL-UNNAMED</option>
-                    </options>
+                    <mainClass>javagraphicmain.Main</mainClass> <!-- CHỈNH CHO ĐÚNG -->
                 </configuration>
             </plugin>
         </plugins>
