@@ -3,7 +3,7 @@ package javagraphicmain;
 import javafx.application.Application;   // Lớp khởi động JavaFX
 import javafx.scene.Scene;              // Màn cảnh hiển thị
 import javafx.stage.Stage;              // Cửa sổ chính của ứng dụng
-import javafx.scene.paint.Color;        // dùng để đổi mảu background
+// dùng để đổi mảu background
 import objectsInGame.*;
 /**
  * bắt đầu chương trình

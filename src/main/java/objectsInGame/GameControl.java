@@ -9,6 +9,8 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;               // font cho chữ
 import javafx.application.Platform;          // Để đóng ứng dụng
+
+import java.awt.*;
 import java.util.ArrayList;                  //danh sách gạch
 
 /**
@@ -171,6 +173,7 @@ public class GameControl extends Pane {
      *
      */
     private void renderAll() {
+
         // set màu nền
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
