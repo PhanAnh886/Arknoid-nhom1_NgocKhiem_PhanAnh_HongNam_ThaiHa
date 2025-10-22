@@ -2,6 +2,7 @@ package objectsInGame;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color; // chỉnh màu sắc
+import objectsInGame.bricks.*;
 
 /**
  * class paddle

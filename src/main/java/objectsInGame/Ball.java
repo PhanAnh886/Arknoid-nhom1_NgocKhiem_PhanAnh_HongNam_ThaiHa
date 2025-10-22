@@ -2,6 +2,7 @@ package objectsInGame;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import objectsInGame.bricks.*;
 
 import java.util.ArrayList;
 
@@ -133,6 +134,7 @@ public class Ball extends MovableObject {
 
             // chạm gạch
             for (Brick brick : bricks) {
+                //ball chỉ chạm bóng khi isDestroyed là true(ko tính các loại gạch đặc biệt)
                 if (!brick.isDestroyed() && intersects(brick)) {
                     double overlapX = Math.min(x + width - brick.getX(), brick.getX() + brick.getWidth() - x);
                     double overlapY = Math.min(y + height - brick.getY(), brick.getY() + brick.getHeight() - y);
@@ -140,7 +142,7 @@ public class Ball extends MovableObject {
                     if (overlapX < overlapY) bounceX();
                     else bounceY();
 
-                    brick.setDestroyed(true);
+                    brick.destroyed(true,bricks);
                     break;
                 }
             }

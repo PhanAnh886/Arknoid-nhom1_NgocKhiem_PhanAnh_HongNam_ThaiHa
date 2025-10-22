@@ -8,8 +8,8 @@ import javafx.scene.paint.Color;             //màu sắc
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;               // font cho chữ
-import javafx.application.Platform;          // Để đóng ứng dụng
-
+import objectsInGame.bricks.*;
+import Level.*;
 import java.util.ArrayList;                  //danh sách gạch
 
 /**
@@ -22,6 +22,7 @@ public class GameControl extends Pane {
     private Paddle paddle;
     private Ball ball;
     private ArrayList<Brick> bricks = new ArrayList<>();
+    private Level currentLevel;  // Level hiện tại
 
     private AnimationTimer loop;
 
@@ -53,20 +54,8 @@ public class GameControl extends Pane {
         paddle = new Paddle(420, 500, 160, 20);
         ball = new Ball(500 - 17, 500 - 34, 17);
 
-        // tạo gạch
-        int x1 = 10;
-        int y1 = 50;
-        int width = 55;
-        int height = 25;
-
-        for (int i = 0; i < 80; i++) {
-            bricks.add(new Brick(x1 + (i % 16) * 60, y1, width, height));
-
-            // khi đủ 16 viên thì xuống hàng
-            if ((i + 1) % 16 == 0) {
-                y1 += 30;  //tăng y để vẽ hàng mới
-            }
-        }
+        currentLevel = new Level();           // Tạo level mới
+        bricks = currentLevel.getBricks();    // Lấy danh sách gạch từ level
 
         // sự kiện paddle và bóng di chuyển theo chuột
         canvas.setOnMouseMoved(new EventHandler<MouseEvent>() {
@@ -141,23 +130,14 @@ public class GameControl extends Pane {
                 break;
 
             case PLAYING:
-
-
-                // Kiểm tra phá hết gạch
-                boolean allDestroyed = true;
-                for (Brick brick : bricks) {
-                    if (!brick.isDestroyed()) {
-                        allDestroyed = false;
-                        break;
-                    }
-                }
-                if (allDestroyed) {
+                //nếu đã hoàn thành level
+                if (currentLevel.isCompleted()) {  // Thay vì duyệt bricks
                     gameState = GameState.NEXT_LEVEL;
                     ball.setLaunched(false);
                     return;
                 }
 
-                // Nếu bóng rơi khỏi màn hình -> mất mạng
+                // Nếu bóng rơi khỏi màn hình -> -1 mạng
                 if (ball.isLaunched() && ball.getY() + ball.getHeight() >= 600) {
                     lives--;
 
@@ -172,7 +152,7 @@ public class GameControl extends Pane {
                 for (Brick brick : bricks) {
                     if (brick.isDestroyed() && !brick.isScored()) {
                         //brick.setDestroyed(true);
-                        score += 10; // Tăng điểm khi phá gạch
+                        score += brick.getScore();  // Mỗi loại cho điểm khác nhau
                         brick.setScored(true); // Đảm bảo chỉ cộng điểm 1 lần
                         // Cập nhật highscore ngay khi có điểm mới lớn hơn highscore
                         if (score > highScore) {
@@ -194,13 +174,13 @@ public class GameControl extends Pane {
     private void resetGame() {
         score = 0;
         lives = 3;
-        for (Brick brick : bricks) brick.setDestroyed(false);
+        currentLevel.reset();  // Gọi method reset của Level thay vì duyệt bricks
         resetState();
         gameState = GameState.PLAYING;
     }
 
     /**
-     * method gộp các object/trạng thái bị reset khi lose game
+     * method gộp các object/trạng thái bị reset khi lose game (khi cần ret trạng thái)
      */
     private void resetState() {
         ball.ballLose();
@@ -212,8 +192,9 @@ public class GameControl extends Pane {
      * method called when all bricks are broked
      */
     private void nextLevel() {
-        for (Brick brick : bricks) brick.setDestroyed(false);
-        ball.ballLose();
+        currentLevel = new Level();        // Tạo level mới
+        bricks = currentLevel.getBricks(); // Cập nhật danh sách gạch
+        resetState();
         gameState = GameState.PLAYING;
     }
 
@@ -255,6 +236,9 @@ public class GameControl extends Pane {
                 gc.fillText("Score: " + score, 20, 30);
                 gc.fillText("Lives: " + lives, 20, 55);
                 gc.fillText("Highscore: " + highScore, 20, 80);
+
+                // hiển thị tên level
+                gc.fillText(currentLevel.getLevelName(), 750, 30);
                 break;
 
             // Hiển thị game over nếu hết mạng
