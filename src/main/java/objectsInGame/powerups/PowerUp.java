@@ -1,10 +1,9 @@
-package objectsInGame;
+package objectsInGame.powerups;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import objectsInGame.bricks.*;
+import objectsInGame.MovableObject;
 
-public class PowerUp extends MovableObject {
+public abstract class PowerUp extends MovableObject {
     private boolean active = false;
     private String type; // loại power up
 
@@ -43,13 +42,7 @@ public class PowerUp extends MovableObject {
     }
 
     @Override
-    public void render(GraphicsContext gc) {
-        if (active) {
-            gc.setFill(Color.GOLD);
-            gc.fillOval(x, y, width, height);
-            gc.setStroke(Color.BLACK);
-            gc.strokeOval(x, y, width, height);
-        }
-    }
+    public abstract void render(GraphicsContext gc);
 }
+
 
