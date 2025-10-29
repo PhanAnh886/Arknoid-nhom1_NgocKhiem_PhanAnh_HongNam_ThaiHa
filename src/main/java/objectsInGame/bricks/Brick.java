@@ -1,8 +1,8 @@
 package objectsInGame.bricks;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import objectsInGame.*;
+import objectsInGame.powerups.PowerUp;
 
 import java.util.ArrayList;
 

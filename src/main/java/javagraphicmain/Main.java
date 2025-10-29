@@ -20,7 +20,6 @@ public class Main extends Application {
         // khởi tạo scene
         Scene scene = new Scene(game);
 
-
         // khởi tạo stage
         primaryStage.setTitle("Arrknoid");
         primaryStage.setScene(scene);
