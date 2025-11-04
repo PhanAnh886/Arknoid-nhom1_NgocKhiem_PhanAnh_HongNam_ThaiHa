@@ -39,6 +39,7 @@ public class GameControl extends Pane {
     private int score = 0;            // điểm người chơi
     private int lives = 3;            // số mạng còn lại
     private int highScore = 0;        // điểm cao nhất
+    private static final String HIGHSCORE_FILE = "highscore.dat";
 
     // Power-up timers
     private boolean shootEnabled = false;
@@ -249,10 +250,16 @@ public class GameControl extends Pane {
                 // Nếu hết bóng -> -1 mạng
                 if (balls.isEmpty()) {
                     lives--;
-                    if (lives <= 0) {
-                        gameState = GameState.GAME_OVER;
+                    if (lives > 0) {
+                        // Reset game về trạng thái chờ phóng
+                        resetBallAndPaddle();
                     } else {
-                        resetState();
+                        // GAME OVER
+                        if (score > highScore) {
+                            highScore = score;
+                            saveHighScore(); // Gọi hàm lưu Highscore
+                        }
+                        gameState = GameState.GAME_OVER;
                     }
                 }
 
@@ -319,6 +326,33 @@ public class GameControl extends Pane {
         }
     }
 
+    // lưu trữ điểm cao
+    private void loadHighScore() {
+        try {
+            java.io.File file = new java.io.File(HIGHSCORE_FILE);
+            if (file.exists()) {
+                java.util.Scanner scanner = new java.util.Scanner(file);
+                if (scanner.hasNextInt()) {
+                    highScore = scanner.nextInt();
+                }
+                scanner.close();
+            }
+        } catch (java.io.IOException e) {
+            System.err.println("Lỗi khi tải Highscore: " + e.getMessage());
+            highScore = 0; // Nếu lỗi, đặt lại là 0
+        }
+    }
+
+    private void saveHighScore() {
+        try {
+            java.io.PrintWriter writer = new java.io.PrintWriter(HIGHSCORE_FILE);
+            writer.println(highScore);
+            writer.close();
+        } catch (java.io.IOException e) {
+            System.err.println("Lỗi khi lưu Highscore: " + e.getMessage());
+        }
+    }
+
     private void applyPowerUp(PowerUp powerUp) {
         switch (powerUp.getType()) {
             case "SHOOT":
@@ -377,10 +411,11 @@ public class GameControl extends Pane {
         score = 0;
         lives = 3;
         currentLevelIndex = 0;
+        loadHighScore();
         currentLevel = levels[currentLevelIndex];
         bricks = currentLevel.getBricks();
         currentLevel.reset();  // Gọi method reset của Level thay vì duyệt bricks
-        resetState();
+        resetBallAndPaddle();
         gameState = GameState.PLAYING;
     }
 
@@ -399,6 +434,26 @@ public class GameControl extends Pane {
         activePowerUps.clear();
         shootEnabled = false;
         fastBallEnabled = false;
+    }
+
+    private void resetBallAndPaddle() {
+        // Tắt các hiệu ứng Power-Up
+        shootEnabled = false;
+        fastBallEnabled = false;
+
+        // Xóa tất cả các PowerUp và Bullet đang hoạt động
+        activePowerUps.clear();
+        bullets.clear();
+
+        // Tái tạo lại bóng
+        balls.clear();
+
+        // Tạo bóng mới ở trên thanh đỡ
+        Ball newBall = new Ball(paddle.getX() + paddle.getWidth() / 2 - 5, paddle.getY() - 10, 5);
+        balls.add(newBall);
+
+        // Đặt lại trạng thái Paddle
+        paddle.setX(450);
     }
 
     /**
