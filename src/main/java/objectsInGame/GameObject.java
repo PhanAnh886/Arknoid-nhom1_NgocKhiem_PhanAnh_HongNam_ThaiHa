@@ -1,6 +1,7 @@
 package objectsInGame;
 
 import javafx.scene.canvas.GraphicsContext; //vẽ hình, màu, text lên Canvas
+import objectsInGame.bricks.*;
 
 /**
  * class chung cho mọi object

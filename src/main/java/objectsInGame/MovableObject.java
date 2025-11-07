@@ -1,6 +1,7 @@
 package objectsInGame;
 
 import javafx.scene.canvas.GraphicsContext;
+import objectsInGame.bricks.*;
 
 /**
  * class chung cho toàn bộ object di chuyển đc

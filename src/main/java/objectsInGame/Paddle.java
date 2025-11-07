@@ -2,6 +2,7 @@ package objectsInGame;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color; // chỉnh màu sắc
+import objectsInGame.bricks.*;
 
 /**
  * class paddle
@@ -53,8 +54,13 @@ public class Paddle extends MovableObject {
         this.maxX = maxX;
     }
 
-    public void resetPaddle(boolean setSpawnBall) {
-        if(setSpawnBall) {
+    /**
+     * method reset paddle đc gọi đông thời khi method ballLose đc gọi
+     *
+     * @param ballLose hàm boolean ballose khi đc gọi thì luôn trả về true
+     */
+    public void resetPaddle(boolean ballLose) {
+        if (ballLose) {
             setX(420);
             setY(500);
         }
