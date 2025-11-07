@@ -250,7 +250,7 @@ public class GameControl extends Pane {
                     lives--;
                     if (lives > 0) {
                         // Reset game về trạng thái chờ phóng
-                        resetBallAndPaddle();
+                        resetState();
                     } else {
                         // GAME OVER
                         if (score > highScore) {
@@ -413,7 +413,7 @@ public class GameControl extends Pane {
         currentLevel = levels[currentLevelIndex];
         bricks = currentLevel.getBricks();
         currentLevel.reset();  // Gọi method reset của Level thay vì duyệt bricks
-        resetBallAndPaddle();
+        resetState();
         gameState = GameState.PLAYING;
     }
 
@@ -432,26 +432,6 @@ public class GameControl extends Pane {
         activePowerUps.clear();
         shootEnabled = false;
         fastBallEnabled = false;
-    }
-
-    private void resetBallAndPaddle() {
-        // Tắt các hiệu ứng Power-Up
-        shootEnabled = false;
-        fastBallEnabled = false;
-
-        // Xóa tất cả các PowerUp và Bullet đang hoạt động
-        activePowerUps.clear();
-        bullets.clear();
-
-        // Tái tạo lại bóng
-        balls.clear();
-
-        // Tạo bóng mới ở trên thanh đỡ
-        Ball newBall = new Ball(paddle.getX() + paddle.getWidth() / 2 - 5, paddle.getY() - 10, 5);
-        balls.add(newBall);
-
-        // Đặt lại trạng thái Paddle
-        paddle.setX(450);
     }
 
     /**
