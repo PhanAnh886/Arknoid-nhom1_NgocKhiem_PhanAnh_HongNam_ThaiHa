@@ -1,12 +1,11 @@
 package objectsInGame;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;               // font cho chữ
@@ -569,14 +568,5 @@ public class GameControl extends Pane {
                 gc.fillText("Click để tiếp tục", 420, 390);;
                 break;
         }
-    }
-}
-
-    public static void playLoseSound() {
-        if (soundLose != null) soundLose.play();
-    }
-
-    public static void playClickSound() {
-        if (soundClick != null) soundClick.play();
     }
 }

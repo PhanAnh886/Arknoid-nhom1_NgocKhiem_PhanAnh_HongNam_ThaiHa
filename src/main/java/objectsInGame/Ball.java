@@ -3,7 +3,7 @@ package objectsInGame;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import objectsInGame.bricks.*;
-
+import javafx.scene.effect.DropShadow;
 import java.util.ArrayList;
 
 /**
@@ -116,9 +116,6 @@ public class Ball extends MovableObject {
 
                 setDx(ballSpeed * Math.sin(bounceAngle));
                 setDy(-Math.abs(ballSpeed * Math.cos(bounceAngle))); // bật lên
-
-                // phát âm thanh bounce (từ GameControl)
-                GameControl.playBounceSound();
             }
 
             // chạm bên trái
@@ -128,14 +125,12 @@ public class Ball extends MovableObject {
             } else if (x + width >= 1000) { //chạm bên phải
                 x = 1000 - width;
                 bounceX();
-                GameControl.playBounceSound();
             }
 
             // chạm trần
             if (y <= 0) {
                 y = 0;
                 bounceY();
-                GameControl.playBounceSound();
             }
 
 
