@@ -18,7 +18,6 @@ public class Ball extends MovableObject {
         super(x, y, radius * 2, radius * 2); // đường kính
         this.dx = 0; // tốc độ ban đầu
         this.dy = 0;
-
     }
 
     /**
@@ -84,13 +83,13 @@ public class Ball extends MovableObject {
         double cx = x + width / 2; // tọa độ tâm x,y
         double cy = y + height / 2;
         double r = width / 2;
-        //lấy vị trí gần tâm x,y nhất
+        // lấy vị trí gần tâm x,y nhất
         double closestX = Math.max(brick.getX(), Math.min(cx, brick.getX() + brick.getWidth()));
         double closestY = Math.max(brick.getY(), Math.min(cy, brick.getY() + brick.getHeight()));
-        //khoảng cách đến điểm gàn nhất
+        // khoảng cách đến điểm gần nhất
         double dx = cx - closestX;
         double dy = cy - closestY;
-        //so sánh vs bán kính(py ta go)
+        // so sánh vs bán kính (py ta go)
         return (dx * dx + dy * dy) <= (r * r);
     }
 
@@ -104,6 +103,8 @@ public class Ball extends MovableObject {
     public void update(double dt, Paddle paddle, ArrayList<Brick> bricks) {
         if (launched) {
             super.update(dt);
+
+            // va chạm với paddle
             if (intersects(paddle)) {
                 double ballCenterX = getX() + getWidth() / 2;
                 double paddleCenterX = paddle.getX() + paddle.getWidth() / 2;
@@ -115,20 +116,26 @@ public class Ball extends MovableObject {
 
                 setDx(ballSpeed * Math.sin(bounceAngle));
                 setDy(-Math.abs(ballSpeed * Math.cos(bounceAngle))); // bật lên
+
+                // phát âm thanh bounce (từ GameControl)
+                GameControl.playBounceSound();
             }
 
-            if (x <= 0) { //chạm bên trái
+            // chạm bên trái
+            if (x <= 0) {
                 x = 0;
                 bounceX();
             } else if (x + width >= 1000) { //chạm bên phải
                 x = 1000 - width;
                 bounceX();
+                GameControl.playBounceSound();
             }
 
             // chạm trần
             if (y <= 0) {
                 y = 0;
                 bounceY();
+                GameControl.playBounceSound();
             }
 
 
@@ -148,7 +155,6 @@ public class Ball extends MovableObject {
             }
 
         }
-
     }
 
     /**
@@ -158,8 +164,19 @@ public class Ball extends MovableObject {
      */
     @Override
     public void render(GraphicsContext gc) {
+        // hiệu ứng đổ bóng cho bóng
+        DropShadow ds = new DropShadow();
+        ds.setRadius(8);
+        ds.setOffsetX(0);
+        ds.setOffsetY(3);
+        ds.setColor(Color.rgb(255, 215, 0, 0.6)); // vàng nhạt trong suốt
+        gc.setEffect(ds);
+
         gc.setFill(Color.ORANGERED);
         gc.fillOval(x, y, width, height);
+
+        // reset effect để các phần tử khác không bị ảnh hưởng
+        gc.setEffect(null);
     }
 
     /**

@@ -1,11 +1,12 @@
 package objectsInGame;
 
-import javafx.animation.AnimationTimer;      //tạo vòng lặp game
-import javafx.scene.canvas.Canvas;           //mặt vẽ
-import javafx.scene.canvas.GraphicsContext;  //dụng cụ vẽ
-import javafx.scene.layout.Pane;             //khung chứa, để dán lên
-import javafx.scene.paint.Color;             //màu sắc
+import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;               // font cho chữ
@@ -16,7 +17,7 @@ import Level.*;
 import java.util.ArrayList;                  //danh sách gạch
 
 /**
- * class điều khiển game
+ * Class điều khiển game chính
  */
 public class GameControl extends Pane {
     private Canvas canvas;
@@ -60,12 +61,12 @@ public class GameControl extends Pane {
     ; // mặc định bắt đầu ở trạng thái menu
 
     /**
-     * hàm control game chính
+     * Hàm khởi tạo game
      */
     public GameControl() {
         canvas = new Canvas(1000, 600);
         gc = canvas.getGraphicsContext2D();
-        this.getChildren().add(canvas);// thêm node canvas vào node lá Pane
+        this.getChildren().add(canvas);
 
         paddle = new Paddle(420, 500, 160, 20);
         balls.add(new Ball(500 - 17, 500 - 34, 17));
@@ -180,12 +181,12 @@ public class GameControl extends Pane {
     }
 
     /**
-     * vòng lặp game
+     * Bắt đầu vòng lặp game
      */
     void startGameLoop() {
         loop = new AnimationTimer() {
             @Override
-            public void handle(long now) { //gọi mỗi frame
+            public void handle(long now) {
                 double dt = 1.0 / 60.0;
                 update(dt);
                 renderAll();
@@ -195,9 +196,7 @@ public class GameControl extends Pane {
     }
 
     /**
-     * cập nhật logic game
-     *
-     * @param dt 1/60 s
+     * Cập nhật logic
      */
     private void update(double dt) {
         switch (gameState) {
@@ -420,8 +419,7 @@ public class GameControl extends Pane {
     }
 
     /**
-     * vẽ lại frame
-     *
+     * Vẽ toàn bộ frame
      */
     private void renderAll() {
         switch (gameState) {
@@ -519,3 +517,11 @@ public class GameControl extends Pane {
     }
 }
 
+    public static void playLoseSound() {
+        if (soundLose != null) soundLose.play();
+    }
+
+    public static void playClickSound() {
+        if (soundClick != null) soundClick.play();
+    }
+}
