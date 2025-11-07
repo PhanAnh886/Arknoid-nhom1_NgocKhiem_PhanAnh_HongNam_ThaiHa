@@ -83,11 +83,6 @@ public class GameControl extends Pane {
         currentLevel = levels[0];      // Tạo level mới
         bricks = currentLevel.getBricks();    // Lấy danh sách gạch từ level
 
-        // QUAN TRỌNG: Request focus để canvas nhận được sự kiện
-        //canvas.setFocusTraversable(true);
-        //this.setFocusTraversable(true);
-        //canvas.requestFocus();
-
         // khởi động vòng lặp game
         startGameLoop();
     }
@@ -144,12 +139,16 @@ public class GameControl extends Pane {
         });
     }
 
+    /**
+     *method of receiving input from the keyboard.
+     *
+     */
     private void setupKeyboardControls() {
         this.setFocusTraversable(true);
         this.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (gameState == GameState.PLAYING && shootEnabled) {
+                if (gameState == GameState.PLAYING && shootEnabled) { //this method jusst worked when shootEnabled = true
                     switch (event.getCode()) {
                         case SPACE:
                             shootBullet();

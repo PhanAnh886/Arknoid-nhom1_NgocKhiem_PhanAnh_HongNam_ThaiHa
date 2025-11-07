@@ -12,11 +12,12 @@ import ui.*;
  *phan anh
  */
 public class Main extends Application {
-    private Stage primaryStage;
+    private Stage primaryStage; //stage chính của cả chương trình, nơi các scene được trình chiếu
     private GameControl gameControl;
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) throws Exception {//override from a method available
+                                                     // in class Application
         this.primaryStage = stage;
         primaryStage.setTitle("Arkanoid");
 

@@ -45,8 +45,8 @@ public class Level0 extends Level {
                     brick = new NormalBrick(x, y, BRICK_WIDTH, BRICK_HEIGHT);
                 }
 
-                // 20% cơ hội có power-up (chỉ cho gạch có thể phá)
-                if (brick.canBeDestroyed() && rand.nextDouble() < 0.2) {
+                // 15% cơ hội có power-up (chỉ cho gạch có thể phá)
+                if (brick.canBeDestroyed() && rand.nextDouble() < 0.15) {
                     int powerType = rand.nextInt(3);
                     PowerUp powerUp = null;
 
