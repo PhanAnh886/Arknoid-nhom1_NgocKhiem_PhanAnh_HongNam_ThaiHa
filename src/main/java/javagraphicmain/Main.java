@@ -15,14 +15,19 @@ public class Main extends Application {
     private Stage primaryStage; //stage chính của cả chương trình, nơi các scene được trình chiếu
     private GameControl gameControl;
 
+    // Lưu level hiện tại để không reset khi thua
+    private int currentLevelIndex = 0;
+    private int currentScore = 0;
+    private int currentLives = 3;
+
     @Override
     public void start(Stage stage) throws Exception {//override from a method available
                                                      // in class Application
-        this.primaryStage = stage;
+        this.primaryStage = stage; //lưu stage vào biến của class
         primaryStage.setTitle("Arkanoid");
 
         showMenu(); // Bắt đầu ở menu
-        primaryStage.show(); // Hiển thị cửa sổ
+        primaryStage.show(); // Hiển thị cửa sổ-hiển thị stage ra màn hình
     }
 
 
@@ -31,24 +36,32 @@ public class Main extends Application {
      */
     public void showMenu() {
         MenuScene menuScene = new MenuScene(this);
-        primaryStage.setScene(menuScene.getScene());
+        primaryStage.setScene(menuScene.getScene()); //đặt scene lên stage
     }
 
     /**
-     * Hiển thị game
+     * Hiển thị game - bắt đầu từ level đã chọn
      */
     public void showGame() {
-        gameControl = new GameControl();
+        showGame(0); // Mặc định bắt đầu từ level 0
+    }
+
+    /**
+     * Hiển thị game với level cụ thể
+     */
+    public void showGame(int levelIndex) {
+        this.currentLevelIndex = levelIndex;
+        gameControl = new GameControl(this, levelIndex);
         Scene gameScene = new Scene(gameControl, 1000, 600);
-        primaryStage.setScene(gameScene);
+        primaryStage.setScene(gameScene); //switch scene sang game scene
         gameControl.requestFocus(); // Quan trọng để nhận phím
     }
 
     /**
      * Hiển thị game over
      */
-    public void showGameOver() {
-        GameOverScene gameOverScene = new GameOverScene(this);
+    public void showGameOver(int score, int highScore) {
+        GameOverScene gameOverScene = new GameOverScene(this, score, highScore);
         primaryStage.setScene(gameOverScene.getScene());
     }
 
@@ -56,12 +69,15 @@ public class Main extends Application {
      * Hiển thị pause
      */
     public void showPause() {
-        PauseScene pauseScene = new PauseScene(this);
-        primaryStage.setScene(pauseScene.getScene());
+        if (gameControl != null) {
+            gameControl.pauseGame();
+            PauseScene pauseScene = new PauseScene(this);
+            primaryStage.setScene(pauseScene.getScene());
+        }
     }
 
     /**
-     * Resume game (chưa implement đầy đủ)
+     * Resume game
      */
     public void resumeGame() {
         if (gameControl != null) {
@@ -69,6 +85,46 @@ public class Main extends Application {
             primaryStage.setScene(gameScene);
             gameControl.requestFocus();
         }
+    }
+
+    /**
+     * Hiển thị màn chọn level
+     */
+    public void showLevelSelect() {
+        LevelSelectScene levelSelectScene = new LevelSelectScene(this);
+        primaryStage.setScene(levelSelectScene.getScene());
+    }
+
+    /**
+     * Hiển thị high score
+     */
+    public void showHighScore() {
+        HighScoreScene highScoreScene = new HighScoreScene(this);
+        primaryStage.setScene(highScoreScene.getScene());
+    }
+
+    /**
+     * Hiển thị settings
+     */
+    public void showSettings() {
+        SettingsScene settingsScene = new SettingsScene(this);
+        primaryStage.setScene(settingsScene.getScene());
+    }
+
+    /**
+     * Retry level hiện tại (không reset về level 0)
+     */
+    public void retryCurrentLevel() {
+        if (gameControl != null) {
+            showGame(gameControl.getCurrentLevelIndex());
+        }
+    }
+
+    /**
+     * Chuyển sang level tiếp theo
+     */
+    public void nextLevel(int nextLevelIndex) {
+        showGame(nextLevelIndex);
     }
 
     /**

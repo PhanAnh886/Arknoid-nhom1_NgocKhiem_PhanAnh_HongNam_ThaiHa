@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class Ball extends MovableObject {
     private boolean launched = false;
-    private boolean mouseClicked = true;
+    private boolean mouseClicked = true; // mặc định ban đầu là cho bắn bóng
 
     //Constructor with 3 inputs (cuz width = height = radius x2)
     public Ball(double x, double y, double radius) {
@@ -45,7 +45,7 @@ public class Ball extends MovableObject {
      */
     public void setLaunched(boolean value) {
         this.launched = value;
-        if (mouseClicked) {
+        if (mouseClicked) {//restrict clicked multiple time which make the ball increase speed
             this.dy = -250;
             setClicked(false);
         }
@@ -134,7 +134,7 @@ public class Ball extends MovableObject {
             }
 
 
-            // chạm gạch
+            // va chạm với gạch
             for (Brick brick : bricks) {
                 //ball chỉ chạm bóng khi isDestroyed là true(ko tính các loại gạch đặc biệt)
                 if (!brick.isDestroyed() && intersects(brick)) {
