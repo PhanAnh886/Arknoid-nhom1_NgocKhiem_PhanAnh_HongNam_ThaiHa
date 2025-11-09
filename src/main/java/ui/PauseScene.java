@@ -31,13 +31,13 @@ public class PauseScene {
         Button menuButton = createButton("Main Menu", Color.web("#2196F3"));
         Button exitButton = createButton("Exit Game", Color.web("#f44336"));
 
-        // Resume lại game
+        //  Resume lại game
         resumeButton.setOnAction(e -> mainApp.resumeGame());
 
-        // Trở về menu chính
+        //  Trở về menu chính
         menuButton.setOnAction(e -> mainApp.showMenu());
 
-        // Thoát game
+        //  Thoát game
         exitButton.setOnAction(e -> System.exit(0));
 
         VBox layout = new VBox(30, title, hint, resumeButton, menuButton, exitButton);
