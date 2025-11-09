@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import objectsInGame.MovableObject;
 
 public abstract class PowerUp extends MovableObject {
-    private boolean active = false;
+    private boolean active = false; //activw này là cho phép rơi xuống chứ ko phải apply tác dụng
     private String type; // loại power up
 
     public PowerUp(String type) {
