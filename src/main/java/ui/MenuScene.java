@@ -31,7 +31,7 @@ public class MenuScene {
         Button exitButton = createMenuButton("Exit");
 
         // Xử lý sự kiện
-        startButton.setOnAction(e -> mainApp.showGame());
+        startButton.setOnAction(e -> mainApp.showGame(0));
         selectLevelButton.setOnAction(e -> mainApp.showLevelSelect());
         highScoreButton.setOnAction(e -> mainApp.showHighScore());
         settingsButton.setOnAction(e -> mainApp.showSettings());

@@ -14,6 +14,8 @@ import ui.*;
 public class Main extends Application {
     private Stage primaryStage; //stage chính của cả chương trình, nơi các scene được trình chiếu
     private GameControl gameControl;
+    Scene gameScene; // dùng cho cơ chế lưu lại để dừng tạm thời
+    // và bật vòng lặp trong gameControl mà ko phải tạo 1 scene mới chứa 1 cái gameconTrol mới
 
     // Lưu level hiện tại để không reset khi thua
     private int currentLevelIndex = 0;
@@ -30,7 +32,7 @@ public class Main extends Application {
         primaryStage.show(); // Hiển thị cửa sổ-hiển thị stage ra màn hình
     }
 
-
+    //--------------METHODS INTERACT WITH EACH OTHER VIA BUTTON DEFINED BY  SCENE CLASSES IN UI PACKAGE------------
     /**
      * Hiển thị menu chính
      */
@@ -40,19 +42,12 @@ public class Main extends Application {
     }
 
     /**
-     * Hiển thị game - bắt đầu từ level đã chọn
-     */
-    public void showGame() {
-        showGame(0); // Mặc định bắt đầu từ level 0
-    }
-
-    /**
      * Hiển thị game với level cụ thể
      */
     public void showGame(int levelIndex) {
         this.currentLevelIndex = levelIndex;
         gameControl = new GameControl(this, levelIndex);
-        Scene gameScene = new Scene(gameControl, 1000, 600);
+        gameScene = new Scene(gameControl, 1000, 600);
         primaryStage.setScene(gameScene); //switch scene sang game scene
         gameControl.requestFocus(); // Quan trọng để nhận phím
     }
@@ -70,8 +65,8 @@ public class Main extends Application {
      */
     public void showPause() {
         if (gameControl != null) {
-            gameControl.pauseGame();
-            PauseScene pauseScene = new PauseScene(this);
+            gameControl.pauseGame(); // call method pause trong gameControl giúp dùng loop tạm thời
+            PauseScene pauseScene = new PauseScene(this); // mở scene game pause
             primaryStage.setScene(pauseScene.getScene());
         }
     }
@@ -81,9 +76,8 @@ public class Main extends Application {
      */
     public void resumeGame() {
         if (gameControl != null) {
-            Scene gameScene = new Scene(gameControl, 1000, 600);
+            gameControl.resumeGame(); // call method resume trong gameControl giúp khôi phục loop
             primaryStage.setScene(gameScene);
-            gameControl.requestFocus();
         }
     }
 
