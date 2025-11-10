@@ -53,11 +53,8 @@ public class GameControl extends Pane {
 
     // trạng thái game
     private enum GameState {
-        MENU,       //màn hình menu
         PLAYING,    // đang chơi
-        GAME_OVER,  // thua hết mạng
         NEXT_LEVEL,  // phá hết gạch
-        PAUSED
     }
 
     private GameState gameState = GameState.PLAYING;
@@ -69,7 +66,9 @@ public class GameControl extends Pane {
     private double pauseButtonHeight = 35;
 
     /**
-     * Hàm khởi tạo game
+     *
+     * @param mainApp dùng đối tượng mainApp để truy cập vào các method đổi scene
+     * @param startLevelIndex level đầu vào
      */
     public GameControl(Main mainApp, int startLevelIndex) {
         this.mainApp = mainApp;
@@ -77,7 +76,7 @@ public class GameControl extends Pane {
 
         canvas = new Canvas(1000, 600);
         gc = canvas.getGraphicsContext2D();
-        this.getChildren().add(canvas);
+        this.getChildren().add(canvas); // thêm bảng để vẽ lên Pane(ở đây là gameControl)
 
         paddle = new Paddle(420, 500, 160, 20);
         balls.add(new Ball(500 - 17, 500 - 34, 17));
@@ -93,11 +92,30 @@ public class GameControl extends Pane {
         setupMouseControls();
         setupKeyboardControls();
 
-        currentLevel = levels[0];      // Tạo level mới
+        currentLevel = levels[currentLevelIndex];      // Tạo level mới
         bricks = currentLevel.getBricks();    // Lấy danh sách gạch từ level
 
         // khởi động vòng lặp game
         startGameLoop();
+    }
+
+    //---------------------METHOD HỖ TRỢ TRONG CONSTRUCTOR---------------------------------
+
+    // lưu trữ điểm cao
+    private void loadHighScore() {
+        try {
+            java.io.File file = new java.io.File(HIGHSCORE_FILE);
+            if (file.exists()) {
+                java.util.Scanner scanner = new java.util.Scanner(file);
+                if (scanner.hasNextInt()) {
+                    highScore = scanner.nextInt();
+                }
+                scanner.close();
+            }
+        } catch (java.io.IOException e) {
+            System.err.println("Lỗi khi tải Highscore: " + e.getMessage());
+            highScore = 0; // Nếu lỗi, đặt lại là 0
+        }
     }
 
     /**
@@ -159,23 +177,6 @@ public class GameControl extends Pane {
 
     //-------METHODS SUPPORT FOR THE setupMouseControls METHOD-----------------------------------
     /**
-     * method called when losed+clicked, reset game về trạng thái lcus đầu trừ highscore
-     */
-    private void resetGame() {
-        score = 0;
-        lives = 3;
-        currentLevelIndex = 0;
-        loadHighScore();
-        currentLevel = levels[currentLevelIndex];
-        bricks = currentLevel.getBricks();
-        currentLevel.reset();  // Gọi method reset của Level thay vì duyệt bricks
-
-        resetState();
-
-        gameState = GameState.PLAYING;
-    }
-
-    /**
      * method called when all bricks are broked
      */
     private void nextLevel() {
@@ -217,6 +218,7 @@ public class GameControl extends Pane {
                 }
             }
         });
+        this.requestFocus();
     }
 
     //-------------METHOD SUPPORT FOR THE setupKeyboardControls METHO-------------------------------
@@ -397,24 +399,6 @@ public class GameControl extends Pane {
     }
 
     //------------CÁC HÀM HỖ TRỢ TRONG METHOD UPDATE---------
-
-    // lưu trữ điểm cao
-    private void loadHighScore() {
-        try {
-            java.io.File file = new java.io.File(HIGHSCORE_FILE);
-            if (file.exists()) {
-                java.util.Scanner scanner = new java.util.Scanner(file);
-                if (scanner.hasNextInt()) {
-                    highScore = scanner.nextInt();
-                }
-                scanner.close();
-            }
-        } catch (java.io.IOException e) {
-            System.err.println("Lỗi khi tải Highscore: " + e.getMessage());
-            highScore = 0; // Nếu lỗi, đặt lại là 0
-        }
-    }
-
     private void saveHighScore() {
         try {
             java.io.PrintWriter writer = new java.io.PrintWriter(HIGHSCORE_FILE);
@@ -508,23 +492,6 @@ public class GameControl extends Pane {
      */
     private void renderAll() {
         switch (gameState) {
-            /*
-            case MENU:
-                gc.setFill(Color.BLACK);
-                gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-                gc.setFill(Color.WHITE);
-                gc.setFont(new Font("Arial", 48));
-                gc.fillText("ARKANOID", 370, 250); // tiêu đề game
-
-                gc.setFont(new Font("Arial", 24));
-                gc.fillText("Click to play", 390, 320);
-                gc.setFont(new Font("Arial", 20));
-                gc.fillText("Điều khiển: Di chuột để di chuyển thanh đỡ", 310, 370);
-                gc.fillText("Phá hết gạch để qua màn!", 390, 400);
-                gc.fillText("SPACE để bắn (khi có power-up)", 330, 430);
-                break;
-*/
             case PLAYING:
                 // set màu nền
                 gc.setFill(Color.BLACK);
@@ -589,20 +556,6 @@ public class GameControl extends Pane {
                 gc.fillText("PAUSE", pauseButtonX + 12, pauseButtonY + 23);
                 break;
 
-            /* Hiển thị game over nếu hết mạng
-            case GAME_OVER:
-                gc.setFill(Color.WHITE);
-                gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                gc.setFill(Color.RED);
-                gc.setFont(new Font("Arial", 40));
-                gc.fillText("GAME OVER", 400, 300);
-
-                gc.setFill(Color.YELLOW);
-                gc.setFont(new Font("Arial", 24));
-                gc.fillText("Highscore: " + highScore, 420, 350);
-                gc.fillText("Click để chơi lại", 420, 390);
-                break;
-*/
             // Hiển thị thông báo level up
             case NEXT_LEVEL:
                 gc.setFill(Color.BLACK);
@@ -621,7 +574,6 @@ public class GameControl extends Pane {
         if (loop != null) {
             loop.stop();
         }
-        gameState = GameState.PAUSED;
     }
 
     public void resumeGame() {
