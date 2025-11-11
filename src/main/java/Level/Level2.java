@@ -18,8 +18,8 @@ public class Level2 extends Level {
 
     @Override
     protected void createLevel() {
-        double startX = 50;
-        double startY = 50;
+        double startX = 35;
+        double startY = 40;
 
         // Pattern cột (12x10 grid)
         // 1 = Unbreakable (border), 2 = Strong(2hits), 3 = Strong(3hits),
@@ -35,7 +35,7 @@ public class Level2 extends Level {
                 {1,0,3,3,2,2,5,5,0,0,2,3,0,1},
                 {1,0,3,3,2,2,5,0,0,0,2,3,0,1},
                 {1,0,0,0,0,0,0,0,0,0,0,0,0,1},
-                {1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+                {1,0,0,1,2,1,1,3,1,1,2,0,0,1}
         };
 
         Random rand = new Random();
@@ -72,13 +72,16 @@ public class Level2 extends Level {
 
                     switch (powerType) {
                         case 0:
-                            powerUp = new ShootPowerUp(x + BRICK_WIDTH/2 - 10, y + BRICK_HEIGHT/2 - 10);
+                            powerUp = new ShootPowerUp(x + BRICK_WIDTH / 2 - 10, y + BRICK_HEIGHT / 2 - 10);
                             break;
                         case 1:
-                            powerUp = new FastBallPowerUp(x + BRICK_WIDTH/2 - 10, y + BRICK_HEIGHT/2 - 10);
+                            powerUp = new FastBallPowerUp(x + BRICK_WIDTH / 2 - 10, y + BRICK_HEIGHT / 2 - 10);
                             break;
                         case 2:
-                            powerUp = new MultiBallPowerUp(x + BRICK_WIDTH/2 - 10, y + BRICK_HEIGHT/2 - 10);
+                            powerUp = new MultiBallPowerUp(x + BRICK_WIDTH / 2 - 10, y + BRICK_HEIGHT / 2 - 10);
+                            break;
+                        case 3:
+                            powerUp = new PaddleSizePowerUp(x + BRICK_WIDTH / 2 - 10, y + BRICK_HEIGHT / 2 - 10);
                             break;
                     }
                     brick.setPowerUp(powerUp);
