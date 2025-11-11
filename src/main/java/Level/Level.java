@@ -19,7 +19,7 @@ public abstract class Level {
     // --- Hằng số kích thước gạch ---
     protected static final double BRICK_WIDTH = 50;
     protected static final double BRICK_HEIGHT = 35;
-    protected static final double BRICK_PADDING = 0;
+    protected static final double BRICK_PADDING = 1.5;
 
     /**
      * Constructor - các level con sẽ gọi createLevel()
