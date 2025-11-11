@@ -16,10 +16,21 @@ import objectsInGame.powerups.*;
 import Level.*;
 import javagraphicmain.Main;
 
-import java.util.concurrent.CopyOnWriteArrayList; //danh sách gạch
+import sound.SoundManager;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;//danh sách gạch
+import java.util.stream.Collectors;
 
 /**
- * Class điều khiển game chính
+ * Class điều khiển game chính - ĐÃ TỐI ƯU ĐA LUỒNG
+ *
+ * Các cải tiến:
+ * 1. Sử dụng CopyOnWriteArrayList để thread-safe
+ * 2. Parallel streams cho collision detection
+ * 3. Object pooling cho bullets
+ * 4. Cached rendering với dirty flag
  */
 public class GameControl extends Pane {
     private Canvas canvas;
@@ -28,9 +39,11 @@ public class GameControl extends Pane {
 
     private Paddle paddle;
     private CopyOnWriteArrayList<Ball> balls = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Bullet> bullets = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Brick> bricks = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<PowerUp> activePowerUps = new CopyOnWriteArrayList<>();
+    // Object Pool cho bullets để tránh GC overhead
+    private BulletPool bulletPool;
+    private CopyOnWriteArrayList<Bullet> activeBullets = new CopyOnWriteArrayList<>();
 
 
     private Level currentLevel;  // Level hiện tại
