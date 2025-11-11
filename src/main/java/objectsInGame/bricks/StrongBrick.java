@@ -1,8 +1,8 @@
 package objectsInGame.bricks;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import java.util.ArrayList;
 
 /**
  * Gạch cứng - cần nhiều lần hit mới phá
@@ -15,10 +15,20 @@ public class StrongBrick extends Brick {
         super(x, y, width, height);
         this.hitPoints = hitPoints;
         this.maxHitPoints = hitPoints;
+        if (hitPoints == 3) {
+            loadImage("/image/bricks/hardenBrick3HitLeft.png");
+
+        } else if (hitPoints == 2) {
+            loadImage("/image/bricks/hardenBrick2HitLeft.png");
+
+        } else {
+            loadImage("/image/bricks/hardenBrick1HitLeft.png");
+
+        }
     }
 
     @Override
-    public void destroyed(boolean value, ArrayList<Brick> bricks) {
+    public void destroyed(boolean value, CopyOnWriteArrayList<Brick> bricks) {
         //nếu set là true thì giảm hitPoints cho đến khi = 0 thì destroy(true)
         if (value) {
             hitPoints--;
@@ -36,21 +46,23 @@ public class StrongBrick extends Brick {
         if (!destroyed) {
             // Màu đậm dần theo độ cứng
             if (hitPoints == 3) {
-                gc.setFill(Color.DARKVIOLET);
+                loadImage("/image/bricks/hardenBrick3HitLeft.png");
             } else if (hitPoints == 2) {
-                gc.setFill(Color.PURPLE);
+                loadImage("/image/bricks/hardenBrick2HitLeft.png");
             } else {
-                gc.setFill(Color.MEDIUMPURPLE);
+                loadImage("/image/bricks/hardenBrick1HitLeft.png");
             }
 
-            gc.fillRect(x, y, width, height);
-            gc.setStroke(Color.BLACK);
-            gc.setLineWidth(2);
-            gc.strokeRect(x, y, width, height);
-
-            // Hiển thị số hit còn lại
-            gc.setFill(Color.WHITE);
-            gc.fillText(String.valueOf(hitPoints), x + width/2 - 5, y + height/2 + 5);
+            if (useImage && brickImage != null) {
+                // vẽ bằng hình ảnh
+                gc.drawImage(brickImage, x, y, width, height);
+            } else {
+                // dự phòng khi ko vẽ đc bằng hình ảnh
+                gc.setFill(Color.FORESTGREEN);
+                gc.fillRect(x, y, width, height);
+                gc.setStroke(Color.DARKGREEN);
+                gc.strokeRect(x, y, width, height);
+            }
         }
     }
 

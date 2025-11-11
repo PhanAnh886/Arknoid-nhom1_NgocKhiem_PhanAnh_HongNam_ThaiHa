@@ -3,7 +3,8 @@ import objectsInGame.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 
 /**
  * Gạch không thể phá - bóng bật lại nhưng không bị phá
@@ -11,10 +12,11 @@ import java.util.ArrayList;
 public class UnbreakableBrick extends Brick {
     public UnbreakableBrick(double x, double y, double width, double height) {
         super(x, y, width, height);
+        loadImage("/image/bricks/unbreakableBrick.png");
     }
 
     @Override
-    public void destroyed(boolean value, ArrayList<Brick> bricks) {
+    public void destroyed(boolean value, CopyOnWriteArrayList<Brick> bricks) {
         // Không cho phép phá gạch này
         super.destroyed(false,bricks);
     }
@@ -26,16 +28,18 @@ public class UnbreakableBrick extends Brick {
 
     @Override
     public void render(GraphicsContext gc) {
-        gc.setFill(Color.GRAY);
-        gc.fillRect(x, y, width, height);
-        gc.setStroke(Color.DARKGRAY);
-        gc.setLineWidth(2);
-        gc.strokeRect(x, y, width, height);
-
-        // Vẽ dấu X để biểu thị không phá được
-        gc.setStroke(Color.BLACK);
-        gc.strokeLine(x + 5, y + 5, x + width - 5, y + height - 5);
-        gc.strokeLine(x + width - 5, y + 5, x + 5, y + height - 5);
+        if (!destroyed) {
+            if (useImage && brickImage != null) {
+                // vẽ bằng hình ảnh
+                gc.drawImage(brickImage, x, y, width, height);
+            } else {
+                // dự phòng khi ko vẽ đc bằng hình ảnh
+                gc.setFill(Color.FORESTGREEN);
+                gc.fillRect(x, y, width, height);
+                gc.setStroke(Color.DARKGREEN);
+                gc.strokeRect(x, y, width, height);
+            }
+        }
     }
 
     @Override

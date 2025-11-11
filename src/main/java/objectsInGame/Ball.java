@@ -5,7 +5,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import objectsInGame.bricks.*;
 import javafx.scene.effect.DropShadow;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 
 /**
  * class ball
@@ -66,7 +67,7 @@ public class Ball extends MovableObject {
     public void setLaunched(boolean value) {
         this.launched = value;
         if (mouseClicked) {//restrict clicked multiple time which make the ball increase speed
-            this.dy = -250;
+            this.dy = -500;
             setClicked(false);
         }
     }
@@ -120,7 +121,7 @@ public class Ball extends MovableObject {
      * @param paddle truyền vào đối tượng paddle mà ball tương tác
      * @param bricks truyền vào các đối tượng bricks mà ball tương tác
      */
-    public void update(double dt, Paddle paddle, ArrayList<Brick> bricks) {
+    public void update(double dt, Paddle paddle, CopyOnWriteArrayList<Brick> bricks) {
         if (launched) {
             super.update(dt);
 

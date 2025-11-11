@@ -8,15 +8,22 @@ import javafx.scene.paint.Color;
 public class NormalBrick extends Brick {
     public NormalBrick(double x, double y, double width, double height) {
         super(x, y, width, height);
+        loadImage("/image/bricks/normalBrick.png");
     }
 
     @Override
     public void render(GraphicsContext gc) {
         if (!destroyed) {
-            gc.setFill(Color.FORESTGREEN);
-            gc.fillRect(x, y, width, height);
-            gc.setStroke(Color.DARKGREEN);
-            gc.strokeRect(x, y, width, height);
+            if (useImage && brickImage != null) {
+                // vẽ bằng hình ảnh
+                gc.drawImage(brickImage, x, y, width, height);
+            } else {
+                // dự phòng khi ko vẽ đc bằng hình ảnh
+                gc.setFill(Color.FORESTGREEN);
+                gc.fillRect(x, y, width, height);
+                gc.setStroke(Color.DARKGREEN);
+                gc.strokeRect(x, y, width, height);
+            }
         }
     }
 

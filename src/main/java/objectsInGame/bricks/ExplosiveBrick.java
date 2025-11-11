@@ -3,6 +3,8 @@ package objectsInGame.bricks;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 
 /**
  * Gạch nổ - khi phá sẽ phá các gạch xung quanh
@@ -12,10 +14,11 @@ public class ExplosiveBrick extends Brick {
 
     public ExplosiveBrick(double x, double y, double width, double height) {
         super(x, y, width, height);
+        loadImage("/image/bricks/exploseBrick.png");
     }
 
     @Override
-    public void destroyed(boolean value, ArrayList<Brick> bricks){
+    public void destroyed(boolean value, CopyOnWriteArrayList<Brick> bricks){
         if (value) { // nếu true thì ổ explosive trc xong nổ các brick xung quanh sau
             super.destroyed(true,bricks);
             explode(bricks);
@@ -27,18 +30,16 @@ public class ExplosiveBrick extends Brick {
     @Override
     public void render(GraphicsContext gc) {
         if (!destroyed) {
-            // Màu đỏ cam cho gạch nổ
-            gc.setFill(Color.ORANGERED);
-            gc.fillRect(x, y, width, height);
-            gc.setStroke(Color.DARKRED);
-            gc.setLineWidth(2);
-            gc.strokeRect(x, y, width, height);
-
-            // Vẽ biểu tượng bom
-            gc.setFill(Color.YELLOW);
-            double centerX = x + width / 2;
-            double centerY = y + height / 2;
-            gc.fillOval(centerX - 5, centerY - 5, 10, 10);
+            if (useImage && brickImage != null) {
+                // vẽ bằng hình ảnh
+                gc.drawImage(brickImage, x, y, width, height);
+            } else {
+                // dự phòng khi ko vẽ đc bằng hình ảnh
+                gc.setFill(Color.FORESTGREEN);
+                gc.fillRect(x, y, width, height);
+                gc.setStroke(Color.DARKGREEN);
+                gc.strokeRect(x, y, width, height);
+            }
         }
     }
 
@@ -46,7 +47,7 @@ public class ExplosiveBrick extends Brick {
      * Phá các gạch xung quanh khi gạch này bị phá
      * @param bricks danh sách tất cả gạch
      */
-    public void explode(ArrayList<Brick> bricks) {
+    public void explode(CopyOnWriteArrayList<Brick> bricks) {
         //tọa độ trung tâm của explosive brick
         double centerX = x + width / 2;
         double centerY = y + height / 2;
