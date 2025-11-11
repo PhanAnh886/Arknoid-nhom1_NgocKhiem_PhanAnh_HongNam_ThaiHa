@@ -36,16 +36,16 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * Load hình ảnh paddle
+     * Load hình ảnh paddle từ ImageCache
      */
     private void loadImage() {
         try {
-            // Thử load từ resources/images/paddle.png
-            paddleImage = new Image(getClass().getResourceAsStream("/image/paddle/stick_2.png"));
-            useImage = true;
-            System.out.println("Đã load hình ảnh paddle thành công");
+            ImageCache cache = ImageCache.getInstance();
+            paddleImage = cache.getImage("/image/paddle/stick_2.png");
+            useImage = (paddleImage != null);
+            System.out.println("✓ Paddle using cached image");
         } catch (Exception e) {
-            System.err.println("Không tìm thấy hình ảnh paddle.png, dùng màu mặc định");
+            System.err.println("✗ Paddle image failed, using default");
             useImage = false;
         }
     }

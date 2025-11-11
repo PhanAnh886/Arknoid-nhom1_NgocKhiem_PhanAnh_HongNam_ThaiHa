@@ -27,16 +27,16 @@ public class Ball extends MovableObject {
     }
 
     /**
-     * Load hình ảnh ball
+     * Load hình ảnh ball từ ImageCache
      */
     private void loadImage() {
         try {
-            // Thử load từ resources/images/ball.png
-            ballImage = new Image(getClass().getResourceAsStream("/image/ball/ball.peach.png"));
-            useImage = true;
-            System.out.println("Đã load hình ảnh ball thành công!");
+            ImageCache cache = ImageCache.getInstance();
+            ballImage = cache.getImage("/image/ball/ball.peach.png");
+            useImage = (ballImage != null);
+            System.out.println("Ball using cached image");
         } catch (Exception e) {
-            System.err.println("Không tìm thấy hình ảnh ball.png, dùng màu mặc định");
+            System.err.println("Ball image failed, using default");
             useImage = false;
         }
     }

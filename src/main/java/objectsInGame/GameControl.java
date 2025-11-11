@@ -41,9 +41,7 @@ public class GameControl extends Pane {
     private CopyOnWriteArrayList<Ball> balls = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Brick> bricks = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<PowerUp> activePowerUps = new CopyOnWriteArrayList<>();
-    // Object Pool cho bullets để tránh GC overhead
-    private BulletPool bulletPool;
-    private CopyOnWriteArrayList<Bullet> activeBullets = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Bullet> bullets = new CopyOnWriteArrayList<>();
 
 
     private Level currentLevel;  // Level hiện tại
@@ -146,14 +144,14 @@ public class GameControl extends Pane {
                 paddle.setX(mouseX - paddle.getWidth() / 2);
 
                 // nếu bóng chưa phóng thì đi theo luôn
-                for (Ball ball : balls) {
+                balls.parallelStream().forEach(ball ->{ // làm nhiều việc cùng lúc
                     if (!ball.isLaunched()) {
                         ball.setX(mouseX - ball.getWidth() / 2);
                         //giới hạn ball khi paddle chạm biên ở cả hai đầu
                         ball.setX(Math.min(800 - paddle.getWidth() / 2 - ball.width / 2,
                                 Math.max(ball.getX(), paddle.getWidth() / 2 - ball.width / 2)));
                     }
-                }
+                });
             }
         });
 
@@ -170,11 +168,11 @@ public class GameControl extends Pane {
                     mainApp.showPause();
                     return;
                 }
-                for (Ball ball : balls) {
+                balls.parallelStream().forEach(ball -> {
                     if (!ball.isLaunched()) {
                         ball.setLaunched(true); // allowed to launch the ball(đây là vị trí duy nhất cho phép phóng)
                     }
-                }
+                });
             }
         });
     }
@@ -272,9 +270,9 @@ public class GameControl extends Pane {
     private void update(double dt) {
         //nếu đã hoàn thành level
         if (currentLevel.isCompleted()) {  // Thay vì duyệt bricks
-            for (Ball ball : balls) {
+            balls.parallelStream().forEach(ball -> {
                 ball.setLaunched(false);
-            }
+            });
             loop.stop();
             mainApp.showNextLevel(currentLevelIndex, score, lives);
             return;
@@ -283,16 +281,16 @@ public class GameControl extends Pane {
         // -------BALLS-------
         // Xóa bóng rơi xuốnG
         CopyOnWriteArrayList<Ball> ballsToRemove = new CopyOnWriteArrayList<>(); //create a array to save the balls which are losed down
-        for (Ball ball : balls) {
+        balls.parallelStream().forEach(ball -> {
             if (ball.isLaunched() && ball.getY() + ball.getHeight() >= 600) {//ball position touch the bottom of the screen
                 ballsToRemove.add(ball);
             }
             ball.update(dt, paddle, bricks); // LƯU Ý: hàm này là overloading hàm
             // update() của lớp cha chứ ko phải override
-        }
-        for (Ball ball : ballsToRemove) {//erase
+        });
+        ballsToRemove.parallelStream().forEach(ball -> {//erase
             balls.remove(ball);
-        }
+        });
 
         // Nếu hết bóng -> -1 mạng
         if (balls.isEmpty()) {//if there are no ball in the queue(array)
@@ -313,7 +311,7 @@ public class GameControl extends Pane {
 
         //-------BULLETS------
         // Cập nhật đạn
-        for (Bullet bullet : bullets) {
+        bullets.parallelStream().forEach(bullet ->  {
             bullet.update(dt); //là override nên ko bao gồm xóa brick nên phải có duyệt+xóa brick ở dưới
 
             // Kiểm tra va chạm đạn vs gạch
@@ -324,14 +322,14 @@ public class GameControl extends Pane {
                     break;
                 }
             }
-        }
+        });
 
         // Xóa đạn không active
         bullets.removeIf(bullet -> !bullet.isActive());
 
         //----------POWER-UPS-----------------
         // Kiểm tra gạch bị phá -> thả power-up
-        for (Brick brick : bricks) {
+        bricks.parallelStream().forEach(brick -> {
             if (brick.isDestroyed() && !brick.isScored()) {
                 score += brick.getScore();
                 brick.setScored(true);
@@ -350,10 +348,10 @@ public class GameControl extends Pane {
                     brick.setPowerUp(null);
                 }
             }
-        }
+        });
 
         // Cập nhật power-ups rơi xuống
-        for (PowerUp powerUp : activePowerUps) {
+        activePowerUps.forEach(powerUp -> {
             powerUp.update(dt);
 
             // Kiểm tra paddle bắt được power-up
@@ -367,7 +365,7 @@ public class GameControl extends Pane {
             if (powerUp.getY() > 600) {
                 powerUp.setActive(false);
             }
-        }
+        });
 
         // Cập nhật power-up timers, ko nên nhét vào apply power up vì đoạn này cần chạy theo thời gian,nhét
         // vào trong applypowwerup thì nó sẽ chỉ chạy 1 lần khi chạm paddle
@@ -378,13 +376,13 @@ public class GameControl extends Pane {
             if (fastBallTimer <= 0) {
                 fastBallEnabled = false;
                 // Trả tốc độ bóng về bình thường
-                for (Ball ball : balls) {
+                balls.parallelStream().forEach(ball -> {
                     double speed = Math.sqrt(ball.getDx() * ball.getDx() + ball.getDy() * ball.getDy());
                     if (speed > 250) {//nếu quá tốc độ default thì khôi phục lại speed
                         ball.setDx(ball.getDx() * (1 / 1.5));
                         ball.setDy(ball.getDy() * (1 / 1.5));
                     }
-                }
+                });
             }
         }
 

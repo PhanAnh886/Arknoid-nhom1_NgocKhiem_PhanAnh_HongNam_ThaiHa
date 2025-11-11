@@ -31,13 +31,19 @@ public abstract class Brick extends GameObject {
         super(x, y, width, height);
     }
 
+    /**
+     * Load hình ảnh từ ImageCache
+     */
     protected void loadImage(String imagePath) {
         try {
-            brickImage = new Image(getClass().getResourceAsStream(imagePath));
-            useImage = true;
-            System.out.println("Đã load hình ảnh brick: " + imagePath);
+            ImageCache cache = ImageCache.getInstance();
+            brickImage = cache.getImage(imagePath);
+            useImage = (brickImage != null);
+            if (useImage) {
+                System.out.println("✓ Using cached image: " + imagePath);
+            }
         } catch (Exception e) {
-            System.err.println("Không tìm thấy: " + imagePath + ", dùng màu mặc định");
+            System.err.println("✗ Failed to load: " + imagePath);
             useImage = false;
         }
     }
