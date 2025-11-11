@@ -5,14 +5,12 @@ import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.geometry.Pos;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
 import javafx.util.Duration;
 import javagraphicmain.Main;
@@ -50,10 +48,40 @@ public class NextLevelScene {
         VBox layout = new VBox(30, congratsText, levelText, scoreText, livesText,
                 continueButton, menuButton);
         layout.setAlignment(Pos.CENTER);
-        layout.setBackground(new Background(new BackgroundFill(
-                Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        Image bgImage = null;
+        try {
+            bgImage = new Image(getClass().getResourceAsStream("/image/nextLevel/nextLevel.png"));
+        } catch (Exception e) {
+            System.err.println("Không thể tải ảnh nền!");
+            e.printStackTrace();
+        }
 
-        scene = new Scene(layout, 1000, 600);
+        if (bgImage != null) {
+            // 2. Định nghĩa kích thước nền (800x800)
+            BackgroundSize bgSize = new BackgroundSize(
+                    800, 800, // Chiều rộng và cao của ảnh
+                    false, false, // Không tính theo %
+                    false, false  // Không "cover" (che phủ) hay "contain" (vừa vặn)
+            );
+
+            // 3. Tạo BackgroundImage
+            BackgroundImage backgroundImage = new BackgroundImage(
+                    bgImage,
+                    BackgroundRepeat.NO_REPEAT, // Không lặp lại ảnh
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.DEFAULT,  // Căn giữa
+                    bgSize                      // Dùng kích thước đã định nghĩa
+            );
+
+            // 4. Set nền mới cho layout
+            layout.setBackground(new Background(backgroundImage));
+        } else {
+            // Dự phòng nếu không tải được ảnh
+            layout.setBackground(new Background(new BackgroundFill(
+                    Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        }
+
+        scene = new Scene(layout, 800, 600);
 
         // === ANIMATION ===
         addAnimations(congratsText, continueButton);

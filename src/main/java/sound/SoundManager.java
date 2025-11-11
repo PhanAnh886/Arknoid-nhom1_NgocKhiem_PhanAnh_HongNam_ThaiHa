@@ -59,8 +59,8 @@ public class SoundManager {
     private void loadSounds() {
         try {
             // === UI SOUNDS ===
-            loadSound("button_hover", "/sounds/ui/hover.wav");
-            loadSound("button_click", "/sounds/ui/click.wav");
+            loadSound("button_hover", "/sound/Menu Selection Click.wav");
+            loadSound("button_click", "/sound/click.wav");
 
             // === GAME SOUNDS ===
             loadSound("brick_break", "/sounds/game/brick_break.wav");
@@ -72,10 +72,10 @@ public class SoundManager {
             loadSound("game_over", "/sounds/game/game_over.wav");
             loadSound("level_complete", "/sounds/game/level_complete.wav");
 
-            System.out.println("✓ Loaded all sound effects successfully");
+            System.out.println("Loaded all sound effects successfully");
 
         } catch (Exception e) {
-            System.err.println("⚠ Warning: Some sounds could not be loaded");
+            System.err.println("Warning: Some sounds could not be loaded");
             e.printStackTrace();
         }
     }
@@ -90,10 +90,10 @@ public class SoundManager {
                 AudioClip clip = new AudioClip(resource.toString());
                 soundEffects.put(name, clip);
             } else {
-                System.err.println("⚠ Sound not found: " + path);
+                System.err.println("Sound not found: " + path);
             }
         } catch (Exception e) {
-            System.err.println("⚠ Failed to load sound: " + path);
+            System.err.println("Failed to load sound: " + path);
         }
     }
 
@@ -119,10 +119,10 @@ public class SoundManager {
                 bgMusicPlayer.setVolume(musicVolume);
                 bgMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop vô hạn
 
-                System.out.println("✓ Loaded background music: " + path);
+                System.out.println("Loaded background music: " + path);
             }
         } catch (Exception e) {
-            System.err.println("⚠ Failed to load background music: " + path);
+            System.err.println("Failed to load background music: " + path);
             e.printStackTrace();
         }
     }

@@ -17,11 +17,20 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
 import javagraphicmain.Main;
+import sound.SoundManager;
 
 public class MenuScene {
     private Scene scene;
+    private SoundManager soundManager;
+
 
     public MenuScene(Main mainApp) {
+        soundManager = SoundManager.getInstance();
+
+        // Load và play background music
+        soundManager.loadBackgroundMusic("/sounds/Dark Clouds Covering The Horizon - Loading Background Music.wav");
+        soundManager.playBackgroundMusic();
+
         // Các nút
         Button startButton = createMenuButton("Start Game");
         Button selectLevelButton = createMenuButton("Select Level");
@@ -30,11 +39,31 @@ public class MenuScene {
         Button exitButton = createMenuButton("Exit");
 
         // Xử lý sự kiện
-        startButton.setOnAction(e -> mainApp.showGame(0));
-        selectLevelButton.setOnAction(e -> mainApp.showLevelSelect());
-        highScoreButton.setOnAction(e -> mainApp.showHighScore());
-        settingsButton.setOnAction(e -> mainApp.showSettings());
-        exitButton.setOnAction(e -> System.exit(0));
+        // Xử lý sự kiện với âm thanh
+        startButton.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            mainApp.showGame(0);
+        });
+
+        selectLevelButton.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            mainApp.showLevelSelect();
+        });
+
+        highScoreButton.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            mainApp.showHighScore();
+        });
+
+        settingsButton.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            mainApp.showSettings();
+        });
+
+        exitButton.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            System.exit(0);
+        });
 
         VBox layout = new VBox(20, startButton, selectLevelButton,
                 highScoreButton, settingsButton, exitButton);
@@ -89,13 +118,16 @@ public class MenuScene {
                         "-fx-cursor: hand;"
         );
 
-        // Hiệu ứng hover
-        button.setOnMouseEntered(e -> button.setStyle(
-                "-fx-background-color: #1976D2; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-cursor: hand;"
-        ));
+        // Hiệu ứng hover VỚI ÂM THANH
+        button.setOnMouseEntered(e -> {
+            SoundManager.getInstance().playSound("button_hover");
+            button.setStyle(
+                    "-fx-background-color: #1976D2; " +
+                            "-fx-text-fill: white; " +
+                            "-fx-background-radius: 10; " +
+                            "-fx-cursor: hand;"
+            );
+        });
         button.setOnMouseExited(e -> button.setStyle(
                 "-fx-background-color: #2196F3; " +
                         "-fx-text-fill: white; " +

@@ -207,7 +207,7 @@ public class GameControl extends Pane {
             @Override
             public void handle(KeyEvent event) {
                 switch (event.getCode()) {//lấy mã phím từ đầu vào
-                    case SPACE:
+                    case E:
                         if (shootEnabled) shootBullet(); //this method jusst worked when shootEnabled = true
                         break;
                     case ESCAPE:
