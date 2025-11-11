@@ -16,7 +16,7 @@ import objectsInGame.powerups.*;
 import Level.*;
 import javagraphicmain.Main;
 
-import java.util.ArrayList;                  //danh sách gạch
+import java.util.concurrent.CopyOnWriteArrayList; //danh sách gạch
 
 /**
  * Class điều khiển game chính
@@ -27,10 +27,11 @@ public class GameControl extends Pane {
     private Main mainApp;
 
     private Paddle paddle;
-    private ArrayList<Ball> balls = new ArrayList<>();
-    private ArrayList<Brick> bricks = new ArrayList<>();
-    private ArrayList<PowerUp> activePowerUps = new ArrayList<>();
-    private ArrayList<Bullet> bullets = new ArrayList<>();
+    private CopyOnWriteArrayList<Ball> balls = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Bullet> bullets = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Brick> bricks = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<PowerUp> activePowerUps = new CopyOnWriteArrayList<>();
+
 
     private Level currentLevel;  // Level hiện tại
     private int currentLevelIndex = 0;
@@ -57,13 +58,6 @@ public class GameControl extends Pane {
     private double paddleSizeTimer = 0;
     private static final double PADDLE_SIZE_DURATION = 10.0; // 10 giây
 
-    // trạng thái game
-    private enum GameState {
-        PLAYING,    // đang chơi
-        NEXT_LEVEL,  // phá hết gạch
-    }
-
-    private GameState gameState = GameState.PLAYING;
 
     // Nút Pause (vùng click góc phải dưới)
     private double pauseButtonX = 700;
@@ -73,7 +67,7 @@ public class GameControl extends Pane {
 
     /**
      *
-     * @param mainApp dùng đối tượng mainApp để truy cập vào các method đổi scene
+     * @param mainApp         dùng đối tượng mainApp để truy cập vào các method đổi scene
      * @param startLevelIndex level đầu vào
      */
     public GameControl(Main mainApp, int startLevelIndex) {
@@ -133,20 +127,18 @@ public class GameControl extends Pane {
         canvas.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if (gameState == GameState.PLAYING) {
-                    double mouseX = event.getX();
+                double mouseX = event.getX();
 
-                    // paddle luôn đi theo chuột
-                    paddle.setX(mouseX - paddle.getWidth() / 2);
+                // paddle luôn đi theo chuột
+                paddle.setX(mouseX - paddle.getWidth() / 2);
 
-                    // nếu bóng chưa phóng thì đi theo luôn
-                    for (Ball ball : balls) {
-                        if (!ball.isLaunched()) {
-                            ball.setX(mouseX - ball.getWidth() / 2);
-                            //giới hạn ball khi paddle chạm biên ở cả hai đầu
-                            ball.setX(Math.min(800 - paddle.getWidth() / 2 - ball.width / 2,
-                                    Math.max(ball.getX(), paddle.getWidth() / 2 - ball.width / 2)));
-                        }
+                // nếu bóng chưa phóng thì đi theo luôn
+                for (Ball ball : balls) {
+                    if (!ball.isLaunched()) {
+                        ball.setX(mouseX - ball.getWidth() / 2);
+                        //giới hạn ball khi paddle chạm biên ở cả hai đầu
+                        ball.setX(Math.min(800 - paddle.getWidth() / 2 - ball.width / 2,
+                                Math.max(ball.getX(), paddle.getWidth() / 2 - ball.width / 2)));
                     }
                 }
             }
@@ -159,29 +151,23 @@ public class GameControl extends Pane {
                 double mouseX = event.getX();
                 double mouseY = event.getY();
 
-                switch (gameState) {
-                    case PLAYING:
-                        //kiểm tra click vào nút pause
-                        if (mouseX >= pauseButtonX && mouseX <= pauseButtonX + pauseButtonWidth &&
-                                mouseY >= pauseButtonY && mouseY <= pauseButtonY + pauseButtonHeight) {
-                            mainApp.showPause();
-                            return;
-                        }
-                        for (Ball ball : balls) {
-                            if (!ball.isLaunched()) {
-                                ball.setLaunched(true); // allowed to launch the ball(đây là vị trí duy nhất cho phép phóng)
-                            }
-                        }
-                        break;
-                    case NEXT_LEVEL:
-                        nextLevel(); // activate line 181
-                        break;
+                //kiểm tra click vào nút pause
+                if (mouseX >= pauseButtonX && mouseX <= pauseButtonX + pauseButtonWidth &&
+                        mouseY >= pauseButtonY && mouseY <= pauseButtonY + pauseButtonHeight) {
+                    mainApp.showPause();
+                    return;
+                }
+                for (Ball ball : balls) {
+                    if (!ball.isLaunched()) {
+                        ball.setLaunched(true); // allowed to launch the ball(đây là vị trí duy nhất cho phép phóng)
+                    }
                 }
             }
         });
     }
 
     //-------METHODS SUPPORT FOR THE setupMouseControls METHOD-----------------------------------
+
     /**
      * method called when all bricks are broked
      */
@@ -193,17 +179,15 @@ public class GameControl extends Pane {
             // Hết level -> thắng game
             currentLevelIndex = 0; // Chơi lại từ đầu
         }
-
         currentLevel = levels[currentLevelIndex];
         bricks = currentLevel.getBricks(); // Cập nhật danh sách gạch
         resetState();
-        gameState = GameState.PLAYING;
     }
 
     //--------------------------------------------------------------------------------------------
 
     /**
-     *method of receiving input from the keyboard.
+     * method of receiving input from the keyboard.
      *
      */
     private void setupKeyboardControls() {
@@ -211,16 +195,14 @@ public class GameControl extends Pane {
         this.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (gameState == GameState.PLAYING) {
-                    switch (event.getCode()) {//lấy mã phím từ đầu vào
-                        case SPACE:
-                            if (shootEnabled) shootBullet(); //this method jusst worked when shootEnabled = true
-                            break;
-                        case ESCAPE:
-                        case P:
-                            mainApp.showPause();
-                            break;
-                    }
+                switch (event.getCode()) {//lấy mã phím từ đầu vào
+                    case SPACE:
+                        if (shootEnabled) shootBullet(); //this method jusst worked when shootEnabled = true
+                        break;
+                    case ESCAPE:
+                    case P:
+                        mainApp.showPause();
+                        break;
                 }
             }
         });
@@ -228,6 +210,7 @@ public class GameControl extends Pane {
     }
 
     //-------------METHOD SUPPORT FOR THE setupKeyboardControls METHO-------------------------------
+
     /**
      * method for powerup shootBullet(no cooldown), just have to enable
      */
@@ -274,26 +257,25 @@ public class GameControl extends Pane {
      * Cập nhật logic
      */
     private void update(double dt) {
-        if (gameState != GameState.PLAYING) return;
-
         //nếu đã hoàn thành level
         if (currentLevel.isCompleted()) {  // Thay vì duyệt bricks
-            gameState = GameState.NEXT_LEVEL;
             for (Ball ball : balls) {
                 ball.setLaunched(false);
             }
+            loop.stop();
+            mainApp.showNextLevel(currentLevelIndex, score, lives);
             return;
         }
 
         // -------BALLS-------
         // Xóa bóng rơi xuốnG
-        ArrayList<Ball> ballsToRemove = new ArrayList<>(); //create a array to save the balls which are losed down
+        CopyOnWriteArrayList<Ball> ballsToRemove = new CopyOnWriteArrayList<>(); //create a array to save the balls which are losed down
         for (Ball ball : balls) {
             if (ball.isLaunched() && ball.getY() + ball.getHeight() >= 600) {//ball position touch the bottom of the screen
                 ballsToRemove.add(ball);
             }
             ball.update(dt, paddle, bricks); // LƯU Ý: hàm này là overloading hàm
-                                            // update() của lớp cha chứ ko phải override
+            // update() của lớp cha chứ ko phải override
         }
         for (Ball ball : ballsToRemove) {//erase
             balls.remove(ball);
@@ -364,7 +346,7 @@ public class GameControl extends Pane {
             // Kiểm tra paddle bắt được power-up
             if (powerUp.intersects(paddle)) {
                 applyPowerUp(powerUp); // power ups are activated as soon as they touched the paddle,
-                                        // event xử lý 1 lần
+                // event xử lý 1 lần
                 powerUp.setActive(false);
             }
 
@@ -408,9 +390,9 @@ public class GameControl extends Pane {
         paddle.update();
 
         //----------BRICKS------
-    // KHÔNG CÓ UPDATE BRICKS VÌ ĐÂY LÀ OBJECT BỊ BỘNG,
-    // ĐC CẬP NHẬT ĐỒNG THỜI TRONG CÁC METHOD UPDATE() CỦA
-    // CÁC OBJECTS CHỦ ĐỘNG KHÁC KHI CHẠM VÔ BRICK(intersect)
+        // KHÔNG CÓ UPDATE BRICKS VÌ ĐÂY LÀ OBJECT BỊ BỘNG,
+        // ĐC CẬP NHẬT ĐỒNG THỜI TRONG CÁC METHOD UPDATE() CỦA
+        // CÁC OBJECTS CHỦ ĐỘNG KHÁC KHI CHẠM VÔ BRICK(intersect)
     }
 
     //------------CÁC HÀM HỖ TRỢ TRONG METHOD UPDATE---------
@@ -426,6 +408,7 @@ public class GameControl extends Pane {
 
     /**
      * method where powerup are applied
+     *
      * @param powerUp
      */
     private void applyPowerUp(PowerUp powerUp) {
@@ -455,8 +438,8 @@ public class GameControl extends Pane {
                 if (!balls.isEmpty()) {
                     Ball original = balls.get(0);
                     if (original.isLaunched()) {
-                        Ball ball1 = new Ball(original.getX(), original.getY(), original.getHeight()/2);
-                        Ball ball2 = new Ball(original.getX(), original.getY(), original.getHeight()/2);
+                        Ball ball1 = new Ball(original.getX(), original.getY(), original.getHeight() / 2);
+                        Ball ball2 = new Ball(original.getX(), original.getY(), original.getHeight() / 2);
 
                         ball1.setLaunched(true);
                         ball2.setLaunched(true);
@@ -488,6 +471,7 @@ public class GameControl extends Pane {
     }
 
     //--------- LƯU Ý: method quan trọng giúp hỗ trợ nhiều mắt xích---------------
+
     /**
      * method gộp các object/trạng thái bị reset khi mất 1 mạng (khi cần reset trạng thái mà ko khôi phục gạch)
      * method is called to reset anything except brick
@@ -516,118 +500,102 @@ public class GameControl extends Pane {
      * Vẽ toàn bộ frame
      */
     private void renderAll() {
-        switch (gameState) {
-            case PLAYING:
-                // set màu nền
-                Image bgImage = null;
-                try {
-                    bgImage = new Image(getClass().getResourceAsStream("/image/inGame/inGame.png"));
-                } catch (Exception e) {
-                    System.err.println("Không thể tải ảnh nền!");
-                    e.printStackTrace();
-                }
+        // set màu nền
+        Image bgImage = null;
+        try {
+            bgImage = new Image(getClass().getResourceAsStream("/image/inGame/inGame.png"));
+        } catch (Exception e) {
+            System.err.println("Không thể tải ảnh nền!");
+            e.printStackTrace();
+        }
 
-                if (bgImage != null) {
-                    // 2. Định nghĩa kích thước nền (800x600, bằng kích thước Scene)
-                    if (bgImage != null) {
-                        // Vẽ ảnh nền khớp với kích thước canvas
-                        gc.drawImage(bgImage, 0, 0, canvas.getWidth(), canvas.getHeight());
-                    } else {
-                        // Dự phòng nếu không tải được ảnh
-                        gc.setFill(Color.BLACK);
-                        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                    }
-
-                    // vẽ bricks,paddle,ball
-                    for (Brick brick : bricks) {
-                        if (!brick.isDestroyed()) {
-                            brick.render(gc);
-                        }
-                    }
-                }
-
-                // Vẽ power-ups
-                for (PowerUp powerUp : activePowerUps) {
-                    powerUp.render(gc);
-                }
-
-                // Vẽ bullets
-                for (Bullet bullet : bullets) {
-                    bullet.render(gc);
-                }
-
-                // Vẽ paddle
-                paddle.render(gc);
-
-                // Vẽ tất cả bóng
-                for (Ball ball : balls) {
-                    ball.render(gc);
-                }
-
-                // điểm số
-                gc.setFill(Color.WHITE);
-                gc.setFont(new Font("Arial", 20));
-                gc.fillText("Score: " + score, 20, 30);
-                gc.setFill(Color.ORANGE);
-                gc.fillText("Lives: " + lives, 20, 55);
-                gc.setFill(Color.GREEN);
-                gc.fillText("Highscore: " + highScore, 20, 80);
-                // hiển thị tên level
-                gc.setFill(Color.YELLOW);
-                gc.fillText(currentLevel.getLevelName(), 750, 30);
-
-                // Hiển thị power-ups active
-                if (shootEnabled) {
-                    gc.setFill(Color.DEEPSKYBLUE);
-                    gc.fillText("SHOOT: ON", 20, 105);
-                }
-                if (fastBallEnabled) {
-                    gc.setFill(Color.RED);
-                    gc.fillText("FAST: " + String.format("%.1f", fastBallTimer), 20, 130);
-                }
-
-                // Hiển thị paddle size status
-                if (paddleSizeEnabled) {
-                    gc.setFill(Color.MEDIUMPURPLE);
-                    String levelText = "";
-                    switch (paddle.getSizeLevel()) {
-                        case 1:
-                            levelText = "LARGE";
-                            break;
-                        case 2:
-                            levelText = "XLARGE";
-                            break;
-                        case 3:
-                            levelText = "XXLARGE";
-                            break;
-                    }
-                    gc.fillText("PADDLE: " + levelText + " (" + String.format("%.1f", paddleSizeTimer) + "s)", 20, 155);
-                }
-
-                // Vẽ nút PAUSE
-                gc.setFill(Color.rgb(50, 50, 50, 0.8));
-                gc.fillRoundRect(pauseButtonX, pauseButtonY, pauseButtonWidth, pauseButtonHeight, 10, 10);
-                gc.setStroke(Color.WHITE);
-                gc.setLineWidth(2);
-                gc.strokeRoundRect(pauseButtonX, pauseButtonY, pauseButtonWidth, pauseButtonHeight, 10, 10);
-
-                gc.setFill(Color.WHITE);
-                gc.setFont(new Font("Arial", 18));
-                gc.fillText("PAUSE", pauseButtonX + 12, pauseButtonY + 23);
-                break;
-
-            // Hiển thị thông báo level up
-            case NEXT_LEVEL:
+        if (bgImage != null) {
+            // 2. Định nghĩa kích thước nền (800x600, bằng kích thước Scene)
+            if (bgImage != null) {
+                // Vẽ ảnh nền khớp với kích thước canvas
+                gc.drawImage(bgImage, 0, 0, canvas.getWidth(), canvas.getHeight());
+            } else {
+                // Dự phòng nếu không tải được ảnh
                 gc.setFill(Color.BLACK);
                 gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                gc.setFill(Color.GREEN);
-                gc.setFont(new Font("Arial", 40));
-                gc.fillText("LEVEL COMPLETED!", 200, 300);
-                gc.setFont(new Font("Arial", 24));
-                gc.fillText("Điểm: " + score, 250, 350);
-                gc.fillText("Click để tiếp tục", 220, 390);;
-                break;
+            }
+
+            // vẽ bricks,paddle,ball
+            for (Brick brick : bricks) {
+                if (!brick.isDestroyed()) {
+                    brick.render(gc);
+                }
+            }
         }
+
+        // Vẽ power-ups
+        for (PowerUp powerUp : activePowerUps) {
+            powerUp.render(gc);
+        }
+
+        // Vẽ bullets
+        for (Bullet bullet : bullets) {
+            bullet.render(gc);
+        }
+
+        // Vẽ paddle
+        paddle.render(gc);
+
+        // Vẽ tất cả bóng
+        for (Ball ball : balls) {
+            ball.render(gc);
+        }
+
+        // điểm số
+        gc.setFill(Color.WHITE);
+        gc.setFont(new Font("Arial", 20));
+        gc.fillText("Score: " + score, 20, 30);
+        gc.setFill(Color.ORANGE);
+        gc.fillText("Lives: " + lives, 20, 55);
+        gc.setFill(Color.GREEN);
+        gc.fillText("Highscore: " + highScore, 20, 80);
+        // hiển thị tên level
+        gc.setFill(Color.YELLOW);
+        gc.fillText(currentLevel.getLevelName(), 750, 30);
+
+        // Hiển thị power-ups active
+        if (shootEnabled) {
+            gc.setFill(Color.DEEPSKYBLUE);
+            gc.fillText("SHOOT: ON", 20, 105);
+        }
+        if (fastBallEnabled) {
+            gc.setFill(Color.RED);
+            gc.fillText("FAST: " + String.format("%.1f", fastBallTimer), 20, 130);
+        }
+
+        // Hiển thị paddle size status
+        if (paddleSizeEnabled) {
+            gc.setFill(Color.MEDIUMPURPLE);
+            String levelText = "";
+            switch (paddle.getSizeLevel()) {
+                case 1:
+                    levelText = "LARGE";
+                    break;
+                case 2:
+                    levelText = "XLARGE";
+                    break;
+                case 3:
+                    levelText = "XXLARGE";
+                    break;
+            }
+            gc.fillText("PADDLE: " + levelText + " (" + String.format("%.1f", paddleSizeTimer) + "s)", 20, 155);
+        }
+
+        // Vẽ nút PAUSE
+        gc.setFill(Color.rgb(50, 50, 50, 0.8));
+        gc.fillRoundRect(pauseButtonX, pauseButtonY, pauseButtonWidth, pauseButtonHeight, 10, 10);
+        gc.setStroke(Color.WHITE);
+        gc.setLineWidth(2);
+        gc.strokeRoundRect(pauseButtonX, pauseButtonY, pauseButtonWidth, pauseButtonHeight, 10, 10);
+
+        gc.setFill(Color.WHITE);
+        gc.setFont(new Font("Arial", 18));
+        gc.fillText("PAUSE", pauseButtonX + 12, pauseButtonY + 23);
     }
 
     public void pauseGame() {
@@ -640,11 +608,11 @@ public class GameControl extends Pane {
         if (loop != null) {
             loop.start();
         }
-        gameState = GameState.PLAYING;
     }
 
     public int getCurrentLevelIndex() {
         return currentLevelIndex;
     }
 }
+
 

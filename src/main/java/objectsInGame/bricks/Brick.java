@@ -2,9 +2,11 @@ package objectsInGame.bricks;
 
 import javafx.scene.canvas.GraphicsContext;
 import objectsInGame.*;
+import javafx.scene.image.Image;
 import objectsInGame.powerups.PowerUp;
 
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 
 /**
  * class gạch
@@ -14,6 +16,9 @@ public abstract class Brick extends GameObject {
     protected boolean scored = false;
     protected PowerUp powerUp; // brick có thể chứa PowerUp
 
+    //load hình ảnh
+    protected Image brickImage;
+    protected boolean useImage = false; //element check
     /**
      * constructor gạch
      *
@@ -26,12 +31,23 @@ public abstract class Brick extends GameObject {
         super(x, y, width, height);
     }
 
+    protected void loadImage(String imagePath) {
+        try {
+            brickImage = new Image(getClass().getResourceAsStream(imagePath));
+            useImage = true;
+            System.out.println("Đã load hình ảnh brick: " + imagePath);
+        } catch (Exception e) {
+            System.err.println("Không tìm thấy: " + imagePath + ", dùng màu mặc định");
+            useImage = false;
+        }
+    }
+
     /**
      * method destroy the brick
      *
      * @param value trạng thái
      */
-    public void destroyed(boolean value, ArrayList<Brick> bricks) {
+    public void destroyed(boolean value, CopyOnWriteArrayList<Brick> bricks) {
         this.destroyed = value;
     }
 

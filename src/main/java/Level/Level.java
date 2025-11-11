@@ -2,7 +2,8 @@ package Level;
 import objectsInGame.*;
 import objectsInGame.bricks.*;
 import objectsInGame.powerups.*;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 
 /**
  * Class cơ sở cho tất cả các level
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  */
 public abstract class Level {
     // Danh sách các gạch trong level
-    protected ArrayList<Brick> bricks;
+    protected CopyOnWriteArrayList<Brick> bricks;
 
     // Tên của level này
     protected String levelName;
@@ -24,7 +25,7 @@ public abstract class Level {
      * Constructor - các level con sẽ gọi createLevel()
      */
     public Level() {
-        this.bricks = new ArrayList<>();
+        this.bricks = new CopyOnWriteArrayList<>();
     }
 
     /**
@@ -35,7 +36,7 @@ public abstract class Level {
     /**
      * Lấy danh sách tất cả gạch trong level
      */
-    public ArrayList<Brick> getBricks() {
+    public CopyOnWriteArrayList<Brick> getBricks() {
         return bricks;
     }
 

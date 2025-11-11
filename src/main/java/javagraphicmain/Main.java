@@ -82,6 +82,17 @@ public class Main extends Application {
     }
 
     /**
+     * Hiển thị mà hình next level khi win 1 level
+     * @param currentLevel level hiện tại
+     * @param score điểm
+     * @param lives mạng
+     */
+    public void showNextLevel(int currentLevel, int score, int lives) {
+        NextLevelScene nextLevelScene = new NextLevelScene(this, currentLevel, score, lives);
+        primaryStage.setScene(nextLevelScene.getScene());
+    }
+
+    /**
      * Hiển thị màn chọn level
      */
     public void showLevelSelect() {
