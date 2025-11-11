@@ -1,7 +1,8 @@
 package objectsInGame;
 
 import javafx.animation.AnimationTimer;
-import javafx.scene.layout.Pane;
+import javafx.geometry.Insets;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
@@ -9,6 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;               // font cho chữ
+import javafx.scene.image.Image;
 import objectsInGame.bricks.*;
 import objectsInGame.powerups.*;
 import Level.*;
@@ -51,6 +53,10 @@ public class GameControl extends Pane {
     private boolean fastBallEnabled = false; //mục đích chính là để cho phép method render vẽ đếm giờ
     private double fastBallTimer = 0;
 
+    private boolean paddleSizeEnabled = false;
+    private double paddleSizeTimer = 0;
+    private static final double PADDLE_SIZE_DURATION = 10.0; // 10 giây
+
     // trạng thái game
     private enum GameState {
         PLAYING,    // đang chơi
@@ -60,7 +66,7 @@ public class GameControl extends Pane {
     private GameState gameState = GameState.PLAYING;
 
     // Nút Pause (vùng click góc phải dưới)
-    private double pauseButtonX = 900;
+    private double pauseButtonX = 700;
     private double pauseButtonY = 550;
     private double pauseButtonWidth = 80;
     private double pauseButtonHeight = 35;
@@ -74,7 +80,7 @@ public class GameControl extends Pane {
         this.mainApp = mainApp;
         this.currentLevelIndex = startLevelIndex;
 
-        canvas = new Canvas(1000, 600);
+        canvas = new Canvas(800, 600);
         gc = canvas.getGraphicsContext2D();
         this.getChildren().add(canvas); // thêm bảng để vẽ lên Pane(ở đây là gameControl)
 
@@ -138,7 +144,7 @@ public class GameControl extends Pane {
                         if (!ball.isLaunched()) {
                             ball.setX(mouseX - ball.getWidth() / 2);
                             //giới hạn ball khi paddle chạm biên ở cả hai đầu
-                            ball.setX(Math.min(1000 - paddle.getWidth() / 2 - ball.width / 2,
+                            ball.setX(Math.min(800 - paddle.getWidth() / 2 - ball.width / 2,
                                     Math.max(ball.getX(), paddle.getWidth() / 2 - ball.width / 2)));
                         }
                     }
@@ -371,6 +377,7 @@ public class GameControl extends Pane {
         // Cập nhật power-up timers, ko nên nhét vào apply power up vì đoạn này cần chạy theo thời gian,nhét
         // vào trong applypowwerup thì nó sẽ chỉ chạy 1 lần khi chạm paddle
         if (shootTimer > 0) shootTimer -= dt;
+
         if (fastBallTimer > 0) {
             fastBallTimer -= dt;
             if (fastBallTimer <= 0) {
@@ -383,6 +390,14 @@ public class GameControl extends Pane {
                         ball.setDy(ball.getDy() * (1 / 1.5));
                     }
                 }
+            }
+        }
+
+        if (paddleSizeTimer > 0) {
+            paddleSizeTimer -= dt;
+            if (paddleSizeTimer <= 0) {
+                paddleSizeEnabled = false;
+                paddle.resetSizeLevel(); // Trả về kích thước normal
             }
         }
 
@@ -462,6 +477,13 @@ public class GameControl extends Pane {
                     }
                 }
                 break;
+
+            case "PADDLE_SIZE":
+                // Tăng kích thước paddle
+                paddle.increaseSizeLevel();
+                paddleSizeEnabled = true;
+                paddleSizeTimer = PADDLE_SIZE_DURATION; // 10 giây
+                break;
         }
     }
 
@@ -483,6 +505,9 @@ public class GameControl extends Pane {
         activePowerUps.clear();
         shootEnabled = false;
         fastBallEnabled = false;
+        paddleSizeEnabled = false;
+        paddleSizeTimer = 0;
+        paddle.resetSizeLevel();
     }
 
     //---------------------------------------------------
@@ -494,13 +519,30 @@ public class GameControl extends Pane {
         switch (gameState) {
             case PLAYING:
                 // set màu nền
-                gc.setFill(Color.BLACK);
-                gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                Image bgImage = null;
+                try {
+                    bgImage = new Image(getClass().getResourceAsStream("/image/inGame/inGame.png"));
+                } catch (Exception e) {
+                    System.err.println("Không thể tải ảnh nền!");
+                    e.printStackTrace();
+                }
 
-                // vẽ bricks,paddle,ball
-                for (Brick brick : bricks) {
-                    if (!brick.isDestroyed()) {
-                        brick.render(gc);
+                if (bgImage != null) {
+                    // 2. Định nghĩa kích thước nền (800x600, bằng kích thước Scene)
+                    if (bgImage != null) {
+                        // Vẽ ảnh nền khớp với kích thước canvas
+                        gc.drawImage(bgImage, 0, 0, canvas.getWidth(), canvas.getHeight());
+                    } else {
+                        // Dự phòng nếu không tải được ảnh
+                        gc.setFill(Color.BLACK);
+                        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                    }
+
+                    // vẽ bricks,paddle,ball
+                    for (Brick brick : bricks) {
+                        if (!brick.isDestroyed()) {
+                            brick.render(gc);
+                        }
                     }
                 }
 
@@ -544,6 +586,24 @@ public class GameControl extends Pane {
                     gc.fillText("FAST: " + String.format("%.1f", fastBallTimer), 20, 130);
                 }
 
+                // Hiển thị paddle size status
+                if (paddleSizeEnabled) {
+                    gc.setFill(Color.MEDIUMPURPLE);
+                    String levelText = "";
+                    switch (paddle.getSizeLevel()) {
+                        case 1:
+                            levelText = "LARGE";
+                            break;
+                        case 2:
+                            levelText = "XLARGE";
+                            break;
+                        case 3:
+                            levelText = "XXLARGE";
+                            break;
+                    }
+                    gc.fillText("PADDLE: " + levelText + " (" + String.format("%.1f", paddleSizeTimer) + "s)", 20, 155);
+                }
+
                 // Vẽ nút PAUSE
                 gc.setFill(Color.rgb(50, 50, 50, 0.8));
                 gc.fillRoundRect(pauseButtonX, pauseButtonY, pauseButtonWidth, pauseButtonHeight, 10, 10);
@@ -562,10 +622,10 @@ public class GameControl extends Pane {
                 gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
                 gc.setFill(Color.GREEN);
                 gc.setFont(new Font("Arial", 40));
-                gc.fillText("LEVEL COMPLETED!", 370, 300);
+                gc.fillText("LEVEL COMPLETED!", 200, 300);
                 gc.setFont(new Font("Arial", 24));
-                gc.fillText("Điểm: " + score, 450, 350);
-                gc.fillText("Click để tiếp tục", 420, 390);;
+                gc.fillText("Điểm: " + score, 250, 350);
+                gc.fillText("Click để tiếp tục", 220, 390);;
                 break;
         }
     }

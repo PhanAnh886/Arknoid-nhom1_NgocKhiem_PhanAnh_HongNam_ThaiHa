@@ -2,13 +2,25 @@ package objectsInGame;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color; // chỉnh màu sắc
+import javafx.scene.image.Image;
 import objectsInGame.bricks.*;
 
 /**
  * class paddle
  */
 public class Paddle extends MovableObject {
-    private double minX = 0, maxX = 1000; // giới hạn (cập nhật từ GameControl)
+    private double minX = 0, maxX = 800; // giới hạn (cập nhật từ GameControl)
+    // ------KÍCH THƯỚC PADDLE (4 cấp độ)------
+    private static final double NORMAL_WIDTH = 160;
+    private static final double LARGE_WIDTH = 200;
+    private static final double XLARGE_WIDTH = 240;
+    private static final double XXLARGE_WIDTH = 280;
+
+    private int sizeLevel = 0; // 0=Normal, 1=Large, 2=XLarge, 3=XXLarge
+
+    // === HÌNH ẢNH ===
+    private Image paddleImage;
+    private boolean useImage = true; //có dùng hình ảnh ko
 
     /**
      * constructor paddle truyền tham số
@@ -20,6 +32,72 @@ public class Paddle extends MovableObject {
      */
     public Paddle(double x, double y, double width, double height) {
         super(x, y, width, height);
+        loadImage();
+    }
+
+    /**
+     * Load hình ảnh paddle
+     */
+    private void loadImage() {
+        try {
+            // Thử load từ resources/images/paddle.png
+            paddleImage = new Image(getClass().getResourceAsStream("/image/paddle/stick_2.png"));
+            useImage = true;
+            System.out.println("Đã load hình ảnh paddle thành công");
+        } catch (Exception e) {
+            System.err.println("Không tìm thấy hình ảnh paddle.png, dùng màu mặc định");
+            useImage = false;
+        }
+    }
+
+    /**
+     * Tăng cấp độ kích thước paddle
+     */
+    public void increaseSizeLevel() {
+        if (sizeLevel < 3) { // Max level = 3
+            sizeLevel++;
+            updatePaddleWidth();
+        }
+    }
+
+    /**
+     * Reset về kích thước bình thường
+     */
+    public void resetSizeLevel() {
+        sizeLevel = 0;
+        updatePaddleWidth();
+    }
+
+    /**
+     * Cập nhật chiều rộng paddle theo level
+     */
+    private void updatePaddleWidth() {
+        double oldWidth = width;
+
+        switch (sizeLevel) {
+            case 0:
+                width = NORMAL_WIDTH;
+                break;
+            case 1:
+                width = LARGE_WIDTH;
+                break;
+            case 2:
+                width = XLARGE_WIDTH;
+                break;
+            case 3:
+                width = XXLARGE_WIDTH;
+                break;
+        }
+
+        // Giữ nguyên vị trí trung tâm của paddle
+        x += (oldWidth - width) / 2;
+    }
+
+    /**
+     * Lấy level hiện tại
+     */
+    public int getSizeLevel() {
+        return sizeLevel;
     }
 
     /**
@@ -39,8 +117,34 @@ public class Paddle extends MovableObject {
      */
     @Override
     public void render(GraphicsContext gc) {
-        gc.setFill(Color.DARKBLUE);
-        gc.fillRect(x, y, width, height);
+        if (useImage && paddleImage != null) {
+            // vẽ bằng hình ảnh
+            gc.drawImage(paddleImage, x, y, width, height);
+
+        } else {
+            // DỰ PHÒNG: Vẽ bằng màu nếu không có ảnh
+            // Màu thay đổi theo level
+            switch (sizeLevel) {
+                case 0:
+                    gc.setFill(Color.DARKBLUE);
+                    break;
+                case 1:
+                    gc.setFill(Color.BLUE);
+                    break;
+                case 2:
+                    gc.setFill(Color.DODGERBLUE);
+                    break;
+                case 3:
+                    gc.setFill(Color.DEEPSKYBLUE);
+                    break;
+            }
+            gc.fillRect(x, y, width, height);
+
+            // Viền
+            gc.setStroke(Color.WHITE);
+            gc.setLineWidth(2);
+            gc.strokeRect(x, y, width, height);
+        }
     }
 
     /**
@@ -63,6 +167,7 @@ public class Paddle extends MovableObject {
         if (ballLose) {
             setX(420);
             setY(500);
+            resetSizeLevel();
         }
     }
 }

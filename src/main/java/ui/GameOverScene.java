@@ -8,6 +8,11 @@ import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
@@ -17,11 +22,6 @@ public class GameOverScene {
     private Scene scene;
 
     public GameOverScene(Main mainApp, int finalScore, int highScore) {
-        Text title = new Text("GAME OVER");
-        title.setFont(new Font("Arial", 60));
-        title.setFill(Color.RED);
-        title.setStyle("-fx-font-weight: bold;");
-
         Text scoreText = new Text("Your Score: " + finalScore);
         scoreText.setFont(new Font("Arial", 32));
         scoreText.setFill(Color.WHITE);
@@ -44,10 +44,41 @@ public class GameOverScene {
         //  Khi bấm Exit → thoát game
         exitButton.setOnAction(e -> System.exit(0));
 
-        VBox layout = new VBox(25, title, scoreText, highScoreText, retryButton, menuButton, exitButton);
-        layout.setAlignment(Pos.CENTER);
-        layout.setBackground(new Background(new BackgroundFill(
-                Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        VBox layout = new VBox(25, scoreText, highScoreText, retryButton, menuButton, exitButton);
+        layout.setAlignment(Pos.BOTTOM_CENTER);
+        layout.setPadding(new Insets(0, 0, 20, 0));
+        Image bgImage = null;
+        try {
+            bgImage = new Image(getClass().getResourceAsStream("/image/gameOver/gameOver.png"));
+        } catch (Exception e) {
+            System.err.println("Không thể tải ảnh nền!");
+            e.printStackTrace();
+        }
+
+        if (bgImage != null) {
+            // 2. Định nghĩa kích thước nền (800x600, bằng kích thước Scene)
+            BackgroundSize bgSize = new BackgroundSize(
+                    800, 800, // Chiều rộng và cao của ảnh
+                    false, false, // Không tính theo %
+                    false, false  // Không "cover" (che phủ) hay "contain" (vừa vặn)
+            );
+
+            // 3. Tạo BackgroundImage
+            BackgroundImage backgroundImage = new BackgroundImage(
+                    bgImage,
+                    BackgroundRepeat.NO_REPEAT, // Không lặp lại ảnh
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.DEFAULT,  // ko căn, lấy từ góc trên ảnh ở giưã
+                    bgSize                      // Dùng kích thước đã định nghĩa
+            );
+
+            // 4. Set nền mới cho layout
+            layout.setBackground(new Background(backgroundImage));
+        } else {
+            // Dự phòng nếu không tải được ảnh
+            layout.setBackground(new Background(new BackgroundFill(
+                    Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        }
 
         scene = new Scene(layout, 800, 600);
     }

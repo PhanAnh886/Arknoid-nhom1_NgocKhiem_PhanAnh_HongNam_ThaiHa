@@ -2,6 +2,7 @@ package objectsInGame;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 import objectsInGame.bricks.*;
 import javafx.scene.effect.DropShadow;
 import java.util.ArrayList;
@@ -13,11 +14,30 @@ public class Ball extends MovableObject {
     private boolean launched = false;
     private boolean mouseClicked = true; // mặc định ban đầu là cho bắn bóng
 
+    private Image ballImage;
+    private boolean useImage = true;
+
     //Constructor with 3 inputs (cuz width = height = radius x2)
     public Ball(double x, double y, double radius) {
         super(x, y, radius * 2, radius * 2); // đường kính
         this.dx = 0; // tốc độ ban đầu
         this.dy = 0;
+        loadImage();
+    }
+
+    /**
+     * Load hình ảnh ball
+     */
+    private void loadImage() {
+        try {
+            // Thử load từ resources/images/ball.png
+            ballImage = new Image(getClass().getResourceAsStream("/image/ball/ball.peach.png"));
+            useImage = true;
+            System.out.println("Đã load hình ảnh ball thành công!");
+        } catch (Exception e) {
+            System.err.println("Không tìm thấy hình ảnh ball.png, dùng màu mặc định");
+            useImage = false;
+        }
     }
 
     /**
@@ -122,8 +142,8 @@ public class Ball extends MovableObject {
             if (x <= 0) {
                 x = 0;
                 bounceX();
-            } else if (x + width >= 1000) { //chạm bên phải
-                x = 1000 - width;
+            } else if (x + width >= 800) { //chạm bên phải
+                x = 800 - width;
                 bounceX();
             }
 
@@ -167,8 +187,14 @@ public class Ball extends MovableObject {
         ds.setColor(Color.rgb(255, 215, 0, 0.6)); // vàng nhạt trong suốt
         gc.setEffect(ds);
 
-        gc.setFill(Color.ORANGERED);
-        gc.fillOval(x, y, width, height);
+        if (useImage && ballImage != null) {
+            // VẼ BẰNG HÌNH ẢNH
+            gc.drawImage(ballImage, x, y, width, height);
+        } else {
+            // DỰ PHÒNG: Vẽ bằng màu nếu không có ảnh
+            gc.setFill(Color.ORANGERED);
+            gc.fillOval(x, y, width, height);
+        }
 
         // reset effect để các phần tử khác không bị ảnh hưởng
         gc.setEffect(null);

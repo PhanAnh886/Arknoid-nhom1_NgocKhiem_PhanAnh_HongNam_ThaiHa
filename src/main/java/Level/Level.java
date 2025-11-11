@@ -1,6 +1,7 @@
 package Level;
 import objectsInGame.*;
 import objectsInGame.bricks.*;
+import objectsInGame.powerups.*;
 import java.util.ArrayList;
 
 /**
@@ -15,9 +16,9 @@ public abstract class Level {
     protected String levelName;
 
     // --- Hằng số kích thước gạch ---
-    protected static final double BRICK_WIDTH = 55;
-    protected static final double BRICK_HEIGHT = 25;
-    protected static final double BRICK_PADDING = 5;
+    protected static final double BRICK_WIDTH = 50;
+    protected static final double BRICK_HEIGHT = 35;
+    protected static final double BRICK_PADDING = 1;
 
     /**
      * Constructor - các level con sẽ gọi createLevel()

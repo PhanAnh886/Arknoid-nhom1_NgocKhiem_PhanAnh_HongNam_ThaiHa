@@ -47,8 +47,9 @@ public class Main extends Application {
     public void showGame(int levelIndex) {
         this.currentLevelIndex = levelIndex;
         gameControl = new GameControl(this, levelIndex);
-        gameScene = new Scene(gameControl, 1000, 1000);
+        gameScene = new Scene(gameControl, 800, 600);
         primaryStage.setScene(gameScene); //switch scene sang game scene
+        gameControl.requestFocus();
     }
 
     /**
