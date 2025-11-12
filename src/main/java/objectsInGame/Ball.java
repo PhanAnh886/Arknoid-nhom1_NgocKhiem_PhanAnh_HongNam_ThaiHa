@@ -131,13 +131,20 @@ public class Ball extends MovableObject {
             if (intersects(paddle)) {
                 double ballCenterX = getX() + getWidth() / 2;
                 double paddleCenterX = paddle.getX() + paddle.getWidth() / 2;
-                double relativeHitPos = (ballCenterX - paddleCenterX) / (paddle.getWidth() / 2);
-                double maxBounceAngle = Math.toRadians(60);
-                double bounceAngle = relativeHitPos * maxBounceAngle;
 
+                // Tính vị trí va chạm tương đối (-1.0 là mép trái, 0 là ở giữa, 1.0 là mép phải)
+                double relativeHitPos = (ballCenterX - paddleCenterX) / (paddle.getWidth() / 2);
+
+                // Góc nảy tối đa (60 độ)
+                double maxBounceAngle = Math.toRadians(60);
+                // Góc nảy thực tế, tỉ lệ với vị trí va chạm
+                double bounceAngle = relativeHitPos * maxBounceAngle;
+                // Lấy tốc độ hiện tại của bóng
                 double ballSpeed = Math.sqrt(getDx() * getDx() + getDy() * getDy());
 
+                // Dùng lượng giác để tính vận tốc (dx, dy) mới dựa trên góc nảy
                 setDx(ballSpeed * Math.sin(bounceAngle));
+                // Luôn nảy LÊN (dấu âm)
                 setDy(-Math.abs(ballSpeed * Math.cos(bounceAngle))); // bật lên
             }
 
@@ -165,6 +172,8 @@ public class Ball extends MovableObject {
                     double overlapX = Math.min(x + width - brick.getX(), brick.getX() + brick.getWidth() - x);
                     double overlapY = Math.min(y + height - brick.getY(), brick.getY() + brick.getHeight() - y);
 
+                    // Nếu lấn theo trục X < lấn theo trục Y -> bóng va chạm từ BÊN CẠNH
+                    // Nếu lấn theo trục X > lấn theo trục Y -> bóng va chạm từ TRÊN/DƯỚI
                     if (overlapX < overlapY) bounceX();
                     else bounceY();
 
