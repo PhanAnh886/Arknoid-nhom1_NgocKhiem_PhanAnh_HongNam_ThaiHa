@@ -76,6 +76,7 @@ public class GameControl extends Pane {
     private double pauseButtonWidth = 80;
     private double pauseButtonHeight = 35;
 
+    private HighScoreManager highScoreManager;
     /**
      *
      * @param mainApp         dùng đối tượng mainApp để truy cập vào các method đổi scene
@@ -98,8 +99,8 @@ public class GameControl extends Pane {
                 new Level1(),
                 new Level2()
         };
-
-        loadHighScore();
+        highScoreManager = HighScoreManager.getInstance();
+        highScore = highScoreManager.getHighScore();
         setupMouseControls();
         setupKeyboardControls();
 
@@ -111,24 +112,6 @@ public class GameControl extends Pane {
     }
 
     //---------------------METHOD HỖ TRỢ TRONG CONSTRUCTOR---------------------------------
-
-    // lưu trữ điểm cao
-    private void loadHighScore() {
-        try {
-            java.io.File file = new java.io.File(HIGHSCORE_FILE);
-            if (file.exists()) {
-                java.util.Scanner scanner = new java.util.Scanner(file);
-                if (scanner.hasNextInt()) {
-                    highScore = scanner.nextInt();
-                }
-                scanner.close();
-            }
-        } catch (java.io.IOException e) {
-            System.err.println("Lỗi khi tải Highscore: " + e.getMessage());
-            highScore = 0; // Nếu lỗi, đặt lại là 0
-        }
-    }
-
     /**
      * method give chance to access mousecontrol, INPUT FROM MOUSE
      * (hàm này chủ yếu giúp di chueyern paddle và nhận các cú click chuột trong màn hình chờ)
@@ -300,10 +283,8 @@ public class GameControl extends Pane {
                 resetState();
             } else {
                 // GAME OVER
-                if (score > highScore) {
-                    highScore = score;
-                    saveHighScore(); // Gọi hàm lưu Highscore để cập nhập highscore mới
-                }
+                highScoreManager.updateHighScore(score); // Sử dụng HighScoreManager
+                highScore = highScoreManager.getHighScore(); // Cập nhật local variable
                 loop.stop();
                 mainApp.showGameOver(score, highScore);
             }
@@ -407,16 +388,6 @@ public class GameControl extends Pane {
     }
 
     //------------CÁC HÀM HỖ TRỢ TRONG METHOD UPDATE---------
-    private void saveHighScore() {
-        try {
-            java.io.PrintWriter writer = new java.io.PrintWriter(HIGHSCORE_FILE);
-            writer.println(highScore);
-            writer.close();
-        } catch (java.io.IOException e) {
-            System.err.println("Lỗi khi lưu Highscore: " + e.getMessage());
-        }
-    }
-
     /**
      * method where powerup are applied
      *
