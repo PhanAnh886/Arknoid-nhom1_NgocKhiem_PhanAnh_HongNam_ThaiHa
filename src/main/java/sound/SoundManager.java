@@ -63,7 +63,9 @@ public class SoundManager {
             loadSound("button_click", "/sound/click.wav");
 
             // === GAME SOUNDS ===
-            loadSound("brick_break", "/sounds/game/brick_break.wav");
+            loadSound("brick_break_normal", "/sound/click.wav");
+            loadSound("brick_break_metal", "/sound/Metal Click.wav");
+
             loadSound("ball_bounce", "/sounds/game/bounce.wav");
             loadSound("powerup_drop", "/sounds/game/powerup_drop.wav");
             loadSound("powerup_pickup", "/sounds/game/powerup_pickup.wav");

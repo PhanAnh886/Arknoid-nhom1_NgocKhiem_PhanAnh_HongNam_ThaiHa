@@ -18,11 +18,16 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
 import javagraphicmain.Main;
+import sound.SoundManager;
 
 public class LevelSelectScene {
     private Scene scene;
+    private SoundManager soundManager;
+
 
     public LevelSelectScene(Main mainApp) {
+        soundManager = SoundManager.getInstance();
+
         Text title = new Text("SELECT LEVEL");
         title.setFont(new Font("Arial", 48));
         title.setFill(Color.WHITE);
@@ -33,15 +38,27 @@ public class LevelSelectScene {
         Button level1Button = createLevelButton("Level 1\nHeart");
         Button level2Button = createLevelButton("Level 2\nColumns");
 
-        level0Button.setOnAction(e -> mainApp.showGame(0));
-        level1Button.setOnAction(e -> mainApp.showGame(1));
-        level2Button.setOnAction(e -> mainApp.showGame(2));
+        level0Button.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            mainApp.showGame(0);
+        });
+        level1Button.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            mainApp.showGame(1);
+        });
+        level2Button.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            mainApp.showGame(2);
+        });
 
         HBox levelButtons = new HBox(30, level0Button, level1Button, level2Button);
         levelButtons.setAlignment(Pos.CENTER);
 
         Button backButton = createBackButton("Back to Menu");
-        backButton.setOnAction(e -> mainApp.showMenu());
+        backButton.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            mainApp.showMenu();
+        });
 
         VBox layout = new VBox(40, title, levelButtons, backButton);
         layout.setAlignment(Pos.CENTER);
@@ -93,12 +110,15 @@ public class LevelSelectScene {
                         "-fx-cursor: hand;"
         );
 
-        button.setOnMouseEntered(e -> button.setStyle(
-                "-fx-background-color: #45a049; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-background-radius: 15; " +
-                        "-fx-cursor: hand;"
-        ));
+        button.setOnMouseEntered(e -> {
+            soundManager.playSound("button_hover");
+            button.setStyle(
+                    "-fx-background-color: #45a049; " +
+                            "-fx-text-fill: white; " +
+                            "-fx-background-radius: 15; " +
+                            "-fx-cursor: hand;"
+            );
+        });
         button.setOnMouseExited(e -> button.setStyle(
                 "-fx-background-color: #4CAF50; " +
                         "-fx-text-fill: white; " +
@@ -121,12 +141,15 @@ public class LevelSelectScene {
                         "-fx-cursor: hand;"
         );
 
-        button.setOnMouseEntered(e -> button.setStyle(
-                "-fx-background-color: #da190b; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-background-radius: 10; " +
-                        "-fx-cursor: hand;"
-        ));
+        button.setOnMouseEntered(e -> {
+            soundManager.playSound("button_hover");
+            button.setStyle(
+                    "-fx-background-color: #da190b; " +
+                            "-fx-text-fill: white; " +
+                            "-fx-background-radius: 10; " +
+                            "-fx-cursor: hand;"
+            );
+        });
         button.setOnMouseExited(e -> button.setStyle(
                 "-fx-background-color: #f44336; " +
                         "-fx-text-fill: white; " +

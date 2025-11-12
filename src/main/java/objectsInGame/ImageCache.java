@@ -64,10 +64,10 @@ public class ImageCache {
             if (!imageMap.containsKey(path)) {
                 Image img = new Image(getClass().getResourceAsStream(path));
                 imageMap.put(path, img);
-                System.out.println("✓ Loaded: " + path);
+                System.out.println("Loaded: " + path);
             }
         } catch (Exception e) {
-            System.err.println("✗ Failed to load: " + path);
+            System.err.println("Failed to load: " + path);
         }
     }
 

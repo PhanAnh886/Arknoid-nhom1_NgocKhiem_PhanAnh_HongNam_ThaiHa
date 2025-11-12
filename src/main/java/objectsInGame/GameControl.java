@@ -55,7 +55,7 @@ public class GameControl extends Pane {
     private int score = 0;            // điểm người chơi
     private int lives = 3;            // số mạng còn lại
     private int highScore = 0;        // điểm cao nhất
-    private static final String HIGHSCORE_FILE = "highscore.dat";
+    private static final String HIGHSCORE_FILE = "HighScore.txt";
 
     // Power-up timers
     private boolean shootEnabled = false; //mục đích chính là để cho phép method render vẽ ON/OFF

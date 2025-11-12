@@ -16,13 +16,18 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
+import sound.SoundManager;
 
 import javagraphicmain.Main;
 
 public class PauseScene {
     private Scene scene;
+    private SoundManager soundManager;
+
 
     public PauseScene(Main mainApp) {
+        soundManager = SoundManager.getInstance();
+
         Text title = new Text("PAUSED");
         title.setFont(new Font("Arial", 60));
         title.setFill(Color.YELLOW);
@@ -36,14 +41,20 @@ public class PauseScene {
         Button menuButton = createButton("Main Menu", Color.web("#2196F3"));
         Button exitButton = createButton("Exit Game", Color.web("#f44336"));
 
-        //  Resume lại game
-        resumeButton.setOnAction(e -> mainApp.resumeGame());
+        resumeButton.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            mainApp.resumeGame();
+        });
 
-        //  Trở về menu chính
-        menuButton.setOnAction(e -> mainApp.showMenu());
+        menuButton.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            mainApp.showMenu();
+        });
 
-        //  Thoát game
-        exitButton.setOnAction(e -> System.exit(0));
+        exitButton.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            System.exit(0);
+        });
 
         VBox layout = new VBox(30, title, hint, resumeButton, menuButton, exitButton);
         layout.setAlignment(Pos.CENTER);
@@ -86,39 +97,81 @@ public class PauseScene {
     private Button createButton(String text, Color color) {
         Button button = new Button(text);
         button.setFont(new Font("Arial", 24));
-        button.setPrefWidth(280);
-        button.setPrefHeight(55);
+        button.setPrefWidth(300);
+        button.setPrefHeight(50);
 
-        String hexColor = String.format("#%02X%02X%02X",
-                (int)(color.getRed() * 255),
-                (int)(color.getGreen() * 255),
-                (int)(color.getBlue() * 255));
-
+        // Style cơ bản - Vàng, vuông, có bóng
         button.setStyle(
-                "-fx-background-color: " + hexColor + "; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-background-radius: 10; " +
+                "-fx-background-color: #FFD700; " +           // Màu vàng
+                        "-fx-text-fill: #000000; " +                  // Chữ đen
+                        "-fx-background-radius: 0; " +                // Không bo tròn (vuông)
+                        "-fx-border-radius: 0; " +                    // Viền vuông
                         "-fx-cursor: hand; " +
-                        "-fx-font-weight: bold;"
+                        "-fx-font-weight: bold; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 3, 3);" // Bóng đổ
         );
 
+        // Hiệu ứng hover - Sáng hơn + bóng lớn hơn + bounce
         button.setOnMouseEntered(e -> {
+            soundManager.playSound("button_hover");
+
+            // Tạo hiệu ứng bounce (phóng to)
+            javafx.animation.ScaleTransition st = new javafx.animation.ScaleTransition(
+                    javafx.util.Duration.millis(100), button
+            );
+            st.setToX(1.05);
+            st.setToY(1.05);
+            st.play();
+
             button.setStyle(
-                    "-fx-background-color: derive(" + hexColor + ", -20%); " +
-                            "-fx-text-fill: white; " +
-                            "-fx-background-radius: 10; " +
+                    "-fx-background-color: #FFC700; " +       // Vàng sáng hơn
+                            "-fx-text-fill: #000000; " +
+                            "-fx-background-radius: 0; " +
+                            "-fx-border-radius: 0; " +
                             "-fx-cursor: hand; " +
-                            "-fx-font-weight: bold;"
+                            "-fx-font-weight: bold; " +
+                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 15, 0, 5, 5);" // Bóng to hơn
             );
         });
+
+        // Hiệu ứng mouse exit - Trở về bình thường
         button.setOnMouseExited(e -> {
-            button.setStyle(
-                    "-fx-background-color: " + hexColor + "; " +
-                            "-fx-text-fill: white; " +
-                            "-fx-background-radius: 10; " +
-                            "-fx-cursor: hand; " +
-                            "-fx-font-weight: bold;"
+            // Trả về kích thước ban đầu
+            javafx.animation.ScaleTransition st = new javafx.animation.ScaleTransition(
+                    javafx.util.Duration.millis(100), button
             );
+            st.setToX(1.0);
+            st.setToY(1.0);
+            st.play();
+
+            button.setStyle(
+                    "-fx-background-color: #FFD700; " +
+                            "-fx-text-fill: #000000; " +
+                            "-fx-background-radius: 0; " +
+                            "-fx-border-radius: 0; " +
+                            "-fx-cursor: hand; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 3, 3);"
+            );
+        });
+
+        // Hiệu ứng khi click - Nhấn xuống
+        button.setOnMousePressed(e -> {
+            javafx.animation.ScaleTransition st = new javafx.animation.ScaleTransition(
+                    javafx.util.Duration.millis(50), button
+            );
+            st.setToX(0.95);
+            st.setToY(0.95);
+            st.play();
+        });
+
+        button.setOnMouseReleased(e -> {
+            javafx.animation.ScaleTransition st = new javafx.animation.ScaleTransition(
+                    javafx.util.Duration.millis(50), button
+            );
+            st.setToX(1.05);
+            st.setToY(1.05);
+            st.play();
         });
 
         return button;
