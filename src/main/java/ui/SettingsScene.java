@@ -24,7 +24,7 @@ import javagraphicmain.Main;
 import sound.SoundManager;
 
 /**
- * Settings Scene với đầy đủ chức năng điều chỉnh âm thanh
+ * Settings Scene với đầy đủ chức năng điều chỉnh âm thanh.
  */
 public class SettingsScene {
     private Scene scene;
@@ -53,7 +53,7 @@ public class SettingsScene {
             soundManager.playSound("button_click");
         });
 
-        // Volume slider for UI sounds
+        // Volume slider for UI sounds.
         Label soundVolumeLabel = new Label("UI Sound Volume: " +
                 String.format("%.0f%%", soundManager.getSoundVolume() * 100));
         soundVolumeLabel.setTextFill(Color.WHITE);
@@ -100,7 +100,7 @@ public class SettingsScene {
             soundManager.setMusicEnabled(musicCheckBox.isSelected());
         });
 
-        // Volume slider for music
+        // Volume slider for music.
         Label musicVolumeLabel = new Label("Music Volume: " +
                 String.format("%.0f%%", soundManager.getMusicVolume() * 100));
         musicVolumeLabel.setTextFill(Color.WHITE);
@@ -143,7 +143,7 @@ public class SettingsScene {
 
         layout.setAlignment(Pos.CENTER);
 
-        // Add separators
+        // Add separators.
         VBox uiSoundBox = new VBox(10, uiSoundTitle, soundCheckBox, soundVolumeLabel, soundVolumeSlider);
         uiSoundBox.setAlignment(Pos.CENTER);
 
@@ -167,7 +167,7 @@ public class SettingsScene {
                 backButton
         );
 
-        // Background
+        // Background.
         Image bgImage = null;
         try {
             bgImage = new Image(getClass().getResourceAsStream("/image/menuBranchs/menuBranch.png"));
@@ -194,7 +194,7 @@ public class SettingsScene {
     }
 
     /**
-     * Tạo đường phân cách
+     * Tạo đường phân cách.
      */
     private javafx.scene.shape.Line createSeparator() {
         javafx.scene.shape.Line line = new javafx.scene.shape.Line(0, 0, 600, 0);

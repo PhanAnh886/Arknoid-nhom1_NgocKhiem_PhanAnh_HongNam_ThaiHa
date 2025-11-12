@@ -4,14 +4,14 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
- * Class đạn bắn từ paddle
+ * Class đạn bắn từ paddle.
  */
 public class Bullet extends MovableObject {
     private boolean active = false;
 
     public Bullet(double x, double y) {
-        super(x, y, 5, 15);  // Đạn nhỏ 5x15 pixel
-        this.dy = -400;  // Bắn lên trên nhanh
+        super(x, y, 5, 15);  // Đạn nhỏ 5x15 pixel.
+        this.dy = -400;  // Bắn lên trên nhanh.
     }
 
     public boolean isActive() {
@@ -26,7 +26,7 @@ public class Bullet extends MovableObject {
     public void update(double dt) {
         if (active) {
             super.update(dt);
-            // Tắt đạn nếu ra khỏi màn hình
+            // Tắt đạn nếu ra khỏi màn hình.
             if (y < 0) {
                 active = false;
             }
