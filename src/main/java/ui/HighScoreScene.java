@@ -124,7 +124,7 @@ public class HighScoreScene {
                         "-fx-cursor: hand;"
         );
 
-        // THÊM ÂM THANH HOVER
+        // THÊM ÂM THANH HOVER.
         button.setOnMouseEntered(e -> {
             soundManager.playSound("button_hover");
             String currentColor = button.getStyle().contains("#f44336") ? "#da190b" : "#1976D2";

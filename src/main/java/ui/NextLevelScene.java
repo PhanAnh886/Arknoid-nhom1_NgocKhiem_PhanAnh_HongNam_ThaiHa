@@ -18,7 +18,7 @@ import sound.SoundManager;
 
 
 /**
- * Màn hình chuyển level - Hiển thị thông tin và có animation
+ * Màn hình chuyển level - Hiển thị thông tin và có animation.
  */
 public class NextLevelScene {
     private Scene scene;
@@ -71,20 +71,20 @@ public class NextLevelScene {
         }
 
         if (bgImage != null) {
-            // 2. Định nghĩa kích thước nền (800x800)
+            // 2. Định nghĩa kích thước nền (800x800).
             BackgroundSize bgSize = new BackgroundSize(
-                    800, 800, // Chiều rộng và cao của ảnh
-                    false, false, // Không tính theo %
-                    false, false  // Không "cover" (che phủ) hay "contain" (vừa vặn)
+                    800, 800, // Chiều rộng và cao của ảnh.
+                    false, false, // Không tính theo %.
+                    false, false  // Không "cover" (che phủ) hay "contain" (vừa vặn).
             );
 
-            // 3. Tạo BackgroundImage
+            // 3. Tạo BackgroundImage.
             BackgroundImage backgroundImage = new BackgroundImage(
                     bgImage,
-                    BackgroundRepeat.NO_REPEAT, // Không lặp lại ảnh
+                    BackgroundRepeat.NO_REPEAT, // Không lặp lại ảnh.
                     BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.DEFAULT,  // Căn giữa
-                    bgSize                      // Dùng kích thước đã định nghĩa
+                    BackgroundPosition.DEFAULT,  // Căn giữa.
+                    bgSize                      // Dùng kích thước đã định nghĩa.
             );
 
             // 4. Set nền mới cho layout

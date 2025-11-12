@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import objectsInGame.bricks.*;
 
 /**
- * class paddle
+ * class paddle.
  */
 public class Paddle extends MovableObject {
     private double minX = 0, maxX = 800; // giới hạn (cập nhật từ GameControl)
@@ -20,15 +20,15 @@ public class Paddle extends MovableObject {
 
     // === HÌNH ẢNH ===
     private Image paddleImage;
-    private boolean useImage = true; //có dùng hình ảnh ko
+    private boolean useImage = true; //có dùng hình ảnh ko.
 
     /**
-     * constructor paddle truyền tham số
+     * constructor paddle truyền tham số.
      *
-     * @param x      hoành độ
-     * @param y      tung độ
-     * @param width  độ dài
-     * @param height chiều cao
+     * @param x      hoành độ.
+     * @param y      tung độ.
+     * @param width  độ dài.
+     * @param height chiều cao.
      */
     public Paddle(double x, double y, double width, double height) {
         super(x, y, width, height);
@@ -36,7 +36,7 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * Load hình ảnh paddle từ ImageCache
+     * Load hình ảnh paddle từ ImageCache.
      */
     private void loadImage() {
         try {
@@ -51,17 +51,17 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * Tăng cấp độ kích thước paddle
+     * Tăng cấp độ kích thước paddle.
      */
     public void increaseSizeLevel() {
-        if (sizeLevel < 3) { // Max level = 3
+        if (sizeLevel < 3) { // Max level = 3.
             sizeLevel++;
             updatePaddleWidth();
         }
     }
 
     /**
-     * Reset về kích thước bình thường
+     * Reset về kích thước bình thường.
      */
     public void resetSizeLevel() {
         sizeLevel = 0;
@@ -69,7 +69,7 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * Cập nhật chiều rộng paddle theo level
+     * Cập nhật chiều rộng paddle theo level.
      */
     private void updatePaddleWidth() {
         double oldWidth = width;
@@ -89,31 +89,31 @@ public class Paddle extends MovableObject {
                 break;
         }
 
-        // Giữ nguyên vị trí trung tâm của paddle
+        // Giữ nguyên vị trí trung tâm của paddle.
         x += (oldWidth - width) / 2;
     }
 
     /**
-     * Lấy level hiện tại
+     * Lấy level hiện tại.
      */
     public int getSizeLevel() {
         return sizeLevel;
     }
 
     /**
-     * cập nhập paddle(mới tạo cho có chứ ch cho nhận hành động từ chuột, phím)
+     * cập nhập paddle(mới tạo cho có chứ ch cho nhận hành động từ chuột, phím).
      *
      */
     public void update() {
-        // giới hạn trong khung
+        // giới hạn trong khung.
         if (x < minX) x = minX;
         if (x + width > maxX) x = maxX - width;
     }
 
     /**
-     * vẽ lên màn hình
+     * vẽ lên màn hình.
      *
-     * @param gc công cụ vẽ lên canvas
+     * @param gc công cụ vẽ lên canvas.
      */
     @Override
     public void render(GraphicsContext gc) {
@@ -122,8 +122,8 @@ public class Paddle extends MovableObject {
             gc.drawImage(paddleImage, x, y, width, height);
 
         } else {
-            // DỰ PHÒNG: Vẽ bằng màu nếu không có ảnh
-            // Màu thay đổi theo level
+            // DỰ PHÒNG: Vẽ bằng màu nếu không có ảnh.
+            // Màu thay đổi theo level.
             switch (sizeLevel) {
                 case 0:
                     gc.setFill(Color.DARKBLUE);
@@ -148,10 +148,10 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * hàm truyền giới hạn cho paddle (chưa sử dụng)
+     * hàm truyền giới hạn cho paddle (chưa sử dụng).
      *
-     * @param minX bên trái
-     * @param maxX bên phải
+     * @param minX bên trái.
+     * @param maxX bên phải.
      */
     public void setBounds(double minX, double maxX) {
         this.minX = minX;
@@ -159,9 +159,9 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * method reset paddle đc gọi đông thời khi method ballLose đc gọi
+     * method reset paddle đc gọi đông thời khi method ballLose đc gọi.
      *
-     * @param ballLose hàm boolean ballose khi đc gọi thì luôn trả về true
+     * @param ballLose hàm boolean ballose khi đc gọi thì luôn trả về true.
      */
     public void resetPaddle(boolean ballLose) {
         if (ballLose) {

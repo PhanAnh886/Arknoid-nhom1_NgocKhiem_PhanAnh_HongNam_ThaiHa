@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
- * Power-up cho phép paddle bắn đạn
+ * Power-up cho phép paddle bắn đạn.
  */
 public class ShootPowerUp extends PowerUp {
 
@@ -17,7 +17,7 @@ public class ShootPowerUp extends PowerUp {
     @Override
     public void render(GraphicsContext gc) {
         if (isActive()) {
-            // Nền màu xanh dương
+            // Nền màu xanh dương.
             gc.setFill(Color.DEEPSKYBLUE);
             gc.fillOval(x, y, width, height);
 
@@ -25,7 +25,7 @@ public class ShootPowerUp extends PowerUp {
             gc.setLineWidth(2);
             gc.strokeOval(x, y, width, height);
 
-            // Vẽ ký hiệu tên lửa
+            // Vẽ ký hiệu tên lửa.
             gc.setFill(Color.WHITE);
             double centerX = x + width / 2;
             double centerY = y + height / 2;

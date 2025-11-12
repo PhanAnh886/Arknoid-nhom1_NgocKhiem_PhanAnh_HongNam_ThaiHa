@@ -7,7 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
- * Gạch không thể phá - bóng bật lại nhưng không bị phá
+ * Gạch không thể phá - bóng bật lại nhưng không bị phá.
  */
 public class UnbreakableBrick extends Brick {
     public UnbreakableBrick(double x, double y, double width, double height) {
@@ -35,7 +35,7 @@ public class UnbreakableBrick extends Brick {
                 // vẽ bằng hình ảnh
                 gc.drawImage(brickImage, x, y, width, height);
             } else {
-                // dự phòng khi ko vẽ đc bằng hình ảnh
+                // dự phòng khi ko vẽ đc bằng hình ảnh.
                 gc.setFill(Color.FORESTGREEN);
                 gc.fillRect(x, y, width, height);
                 gc.setStroke(Color.DARKGREEN);

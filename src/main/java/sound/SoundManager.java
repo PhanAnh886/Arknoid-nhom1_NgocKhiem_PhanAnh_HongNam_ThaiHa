@@ -10,29 +10,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Quản lý tất cả âm thanh trong game
- * Singleton pattern để đảm bảo chỉ có 1 instance
+ * Quản lý tất cả âm thanh trong game.
+ * Singleton pattern để đảm bảo chỉ có 1 instance.
  */
 public class SoundManager {
     private static SoundManager instance;
 
-    // Map lưu trữ các sound effects (âm thanh ngắn)
+    // Map lưu trữ các sound effects (âm thanh ngắn).
     private Map<String, AudioClip> soundEffects;
 
-    // MediaPlayer cho background music
+    // MediaPlayer cho background music.
     private MediaPlayer bgMusicPlayer;
 
-    // Settings
+    // Settings.
     private boolean soundEnabled = true;
     private boolean musicEnabled = true;
     private boolean gameSoundEnabled = true; // Âm thanh phá gạch, powerup...
 
-    // Volume levels
+    // Volume levels.
     private double soundVolume = 0.5;
     private double musicVolume = 0.3;
 
     /**
-     * Private constructor cho Singleton
+     * Private constructor cho Singleton.
      */
     private SoundManager() {
         soundEffects = new HashMap<>();
@@ -40,7 +40,7 @@ public class SoundManager {
     }
 
     /**
-     * Lấy instance duy nhất của SoundManager
+     * Lấy instance duy nhất của SoundManager.
      */
     public static SoundManager getInstance() {
         if (instance == null) {
@@ -50,11 +50,11 @@ public class SoundManager {
     }
 
     /**
-     * Load tất cả âm thanh vào memory
+     * Load tất cả âm thanh vào memory.
      * AudioClip phù hợp cho sound effects vì:
-     * - Load toàn bộ vào memory
-     * - Play ngay lập tức, latency thấp
-     * - Có thể play nhiều lần đồng thời
+     * - Load toàn bộ vào memory.
+     * - Play ngay lập tức, latency thấp.
+     * - Có thể play nhiều lần đồng thời.
      */
     private void loadSounds() {
         try {
@@ -83,7 +83,7 @@ public class SoundManager {
     }
 
     /**
-     * Load một sound effect vào map
+     * Load một sound effect vào map.
      */
     private void loadSound(String name, String path) {
         try {
@@ -102,15 +102,15 @@ public class SoundManager {
     /**
      * Load background music
      * MediaPlayer phù hợp cho music vì:
-     * - Stream từ file, tiết kiệm memory
-     * - Hỗ trợ pause/resume/loop
-     * - Phù hợp với file audio dài
+     * - Stream từ file, tiết kiệm memory.
+     * - Hỗ trợ pause/resume/loop.
+     * - Phù hợp với file audio dài.
      */
     public void loadBackgroundMusic(String path) {
         try {
             URL resource = getClass().getResource(path);
             if (resource != null) {
-                // Cleanup old player nếu có
+                // Cleanup old player nếu có.
                 if (bgMusicPlayer != null) {
                     bgMusicPlayer.stop();
                     bgMusicPlayer.dispose();
@@ -119,7 +119,7 @@ public class SoundManager {
                 Media media = new Media(resource.toString());
                 bgMusicPlayer = new MediaPlayer(media);
                 bgMusicPlayer.setVolume(musicVolume);
-                bgMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop vô hạn
+                bgMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop vô hạn.
 
                 System.out.println("Loaded background music: " + path);
             }
@@ -132,8 +132,8 @@ public class SoundManager {
     // ==================== PLAY METHODS ====================
 
     /**
-     * Play sound effect (UI sounds)
-     * Chỉ play nếu soundEnabled = true
+     * Play sound effect (UI sounds).
+     * Chỉ play nếu soundEnabled = true.
      */
     public void playSound(String name) {
         if (!soundEnabled) return;
@@ -146,8 +146,8 @@ public class SoundManager {
     }
 
     /**
-     * Play game sound effect (phá gạch, powerup...)
-     * Chỉ play nếu gameSoundEnabled = true
+     * Play game sound effect (phá gạch, powerup...).
+     * Chỉ play nếu gameSoundEnabled = true.
      */
     public void playGameSound(String name) {
         if (!gameSoundEnabled || !soundEnabled) return;
@@ -160,7 +160,7 @@ public class SoundManager {
     }
 
     /**
-     * Play background music
+     * Play background music.
      */
     public void playBackgroundMusic() {
         if (bgMusicPlayer != null && musicEnabled) {
@@ -169,7 +169,7 @@ public class SoundManager {
     }
 
     /**
-     * Stop background music
+     * Stop background music.
      */
     public void stopBackgroundMusic() {
         if (bgMusicPlayer != null) {
@@ -178,7 +178,7 @@ public class SoundManager {
     }
 
     /**
-     * Pause background music
+     * Pause background music.
      */
     public void pauseBackgroundMusic() {
         if (bgMusicPlayer != null) {
@@ -187,7 +187,7 @@ public class SoundManager {
     }
 
     /**
-     * Resume background music
+     * Resume background music.
      */
     public void resumeBackgroundMusic() {
         if (bgMusicPlayer != null && musicEnabled) {
@@ -250,7 +250,7 @@ public class SoundManager {
     }
 
     /**
-     * Cleanup khi thoát game
+     * Cleanup khi thoát game.
      */
     public void dispose() {
         if (bgMusicPlayer != null) {

@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
- * Power-up tạo thêm nhiều bóng
+ * Power-up tạo thêm nhiều bóng.
  */
 public class MultiBallPowerUp extends PowerUp {
 
@@ -17,7 +17,7 @@ public class MultiBallPowerUp extends PowerUp {
     @Override
     public void render(GraphicsContext gc) {
         if (isActive()) {
-            // Nền màu xanh lá
+            // Nền màu xanh lá.
             gc.setFill(Color.LIMEGREEN);
             gc.fillOval(x, y, width, height);
 
@@ -25,7 +25,7 @@ public class MultiBallPowerUp extends PowerUp {
             gc.setLineWidth(2);
             gc.strokeOval(x, y, width, height);
 
-            // Vẽ 3 bóng nhỏ
+            // Vẽ 3 bóng nhỏ.
             gc.setFill(Color.WHITE);
             double centerX = x + width / 2;
             double centerY = y + height / 2;
