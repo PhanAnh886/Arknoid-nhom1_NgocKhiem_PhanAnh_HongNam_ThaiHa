@@ -17,17 +17,20 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
 import javagraphicmain.Main;
+import sound.SoundManager;
 
 public class HighScoreScene {
     private Scene scene;
+    private SoundManager soundManager;
 
     public HighScoreScene(Main mainApp) {
+        soundManager = SoundManager.getInstance();
+
         Text title = new Text("HIGH SCORE");
         title.setFont(new Font("Arial", 48));
         title.setFill(Color.GOLD);
         title.setStyle("-fx-font-weight: bold;");
 
-        // Đọc high score từ file
         int highScore = loadHighScore();
 
         Text scoreText = new Text("Best Score: " + highScore);
@@ -39,7 +42,10 @@ public class HighScoreScene {
         infoText.setFill(Color.LIGHTGRAY);
 
         Button backButton = createButton("Back to Menu");
-        backButton.setOnAction(e -> mainApp.showMenu());
+        backButton.setOnAction(e -> {
+            soundManager.playSound("button_click");
+            mainApp.showMenu();
+        });
 
         Button resetButton = createButton("Reset High Score");
         resetButton.setStyle(
@@ -49,41 +55,28 @@ public class HighScoreScene {
                         "-fx-cursor: hand;"
         );
         resetButton.setOnAction(e -> {
+            soundManager.playSound("button_click");
             resetHighScore();
-            mainApp.showHighScore(); // Refresh màn hình
+            mainApp.showHighScore();
         });
 
         VBox layout = new VBox(30, title, scoreText, infoText, backButton, resetButton);
         layout.setAlignment(Pos.CENTER);
+
         Image bgImage = null;
         try {
             bgImage = new Image(getClass().getResourceAsStream("/image/menuBranchs/menuBranch.png"));
         } catch (Exception e) {
             System.err.println("Không thể tải ảnh nền!");
-            e.printStackTrace();
         }
 
         if (bgImage != null) {
-            // 2. Định nghĩa kích thước nền (800x800)
-            BackgroundSize bgSize = new BackgroundSize(
-                    800, 800, // Chiều rộng và cao của ảnh
-                    false, false, // Không tính theo %
-                    false, false  // Không "cover" (che phủ) hay "contain" (vừa vặn)
-            );
-
-            // 3. Tạo BackgroundImage
+            BackgroundSize bgSize = new BackgroundSize(800, 800, false, false, false, false);
             BackgroundImage backgroundImage = new BackgroundImage(
-                    bgImage,
-                    BackgroundRepeat.NO_REPEAT, // Không lặp lại ảnh
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.DEFAULT,  // Căn giữa
-                    bgSize                      // Dùng kích thước đã định nghĩa
-            );
-
-            // 4. Set nền mới cho layout
+                    bgImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.DEFAULT, bgSize);
             layout.setBackground(new Background(backgroundImage));
         } else {
-            // Dự phòng nếu không tải được ảnh
             layout.setBackground(new Background(new BackgroundFill(
                     Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
         }
@@ -93,7 +86,7 @@ public class HighScoreScene {
 
     private int loadHighScore() {
         try {
-            java.io.File file = new java.io.File("highscore.dat");
+            java.io.File file = new java.io.File("HighScore.txt");
             if (file.exists()) {
                 java.util.Scanner scanner = new java.util.Scanner(file);
                 if (scanner.hasNextInt()) {
@@ -111,7 +104,7 @@ public class HighScoreScene {
 
     private void resetHighScore() {
         try {
-            java.io.PrintWriter writer = new java.io.PrintWriter("highscore.dat");
+            java.io.PrintWriter writer = new java.io.PrintWriter("HighScore.txt");
             writer.println(0);
             writer.close();
         } catch (Exception e) {
@@ -131,7 +124,9 @@ public class HighScoreScene {
                         "-fx-cursor: hand;"
         );
 
+        // THÊM ÂM THANH HOVER
         button.setOnMouseEntered(e -> {
+            soundManager.playSound("button_hover");
             String currentColor = button.getStyle().contains("#f44336") ? "#da190b" : "#1976D2";
             button.setStyle(
                     "-fx-background-color: " + currentColor + "; " +

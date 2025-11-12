@@ -142,7 +142,6 @@ public class SettingsScene {
         VBox layout = new VBox(20);
 
         layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(40, 0, 0, 0));
 
         // Add separators
         VBox uiSoundBox = new VBox(10, uiSoundTitle, soundCheckBox, soundVolumeLabel, soundVolumeSlider);
@@ -153,6 +152,7 @@ public class SettingsScene {
 
         VBox musicBox = new VBox(10, musicTitle, musicCheckBox, musicVolumeLabel, musicVolumeSlider);
         musicBox.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(0, 0, 60, 0));
 
         layout.getChildren().addAll(
                 title,

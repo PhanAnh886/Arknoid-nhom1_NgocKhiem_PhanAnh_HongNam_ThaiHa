@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import objectsInGame.ImageCache;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import sound.SoundManager;
 
 /**
  * Gạch cứng - cần nhiều lần hit mới phá
@@ -55,6 +55,8 @@ public class StrongBrick extends Brick {
         //nếu set là true thì giảm hitPoints cho đến khi = 0 thì destroy(true)
         if (value) {
             hitPoints--;
+            SoundManager.getInstance().playGameSound("brick_break_normal");
+
             if (hitPoints <= 0) {
                 super.destroyed(true,bricks);
             } else {

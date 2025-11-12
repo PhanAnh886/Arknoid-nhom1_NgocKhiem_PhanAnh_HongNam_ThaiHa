@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import sound.SoundManager;
 
 /**
  * Gạch nổ - khi phá sẽ phá các gạch xung quanh
@@ -20,6 +20,7 @@ public class ExplosiveBrick extends Brick {
     @Override
     public void destroyed(boolean value, CopyOnWriteArrayList<Brick> bricks){
         if (value) { // nếu true thì ổ explosive trc xong nổ các brick xung quanh sau
+            SoundManager.getInstance().playGameSound("brick_break_normal");
             super.destroyed(true,bricks);
             explode(bricks);
         } else{// kết thúc nổ lan
