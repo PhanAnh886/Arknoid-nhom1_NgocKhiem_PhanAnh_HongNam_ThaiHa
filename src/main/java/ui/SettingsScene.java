@@ -24,7 +24,7 @@ import javagraphicmain.Main;
 import sound.SoundManager;
 
 /**
- * Settings Scene với đầy đủ chức năng điều chỉnh âm thanh
+ * Settings Scene với đầy đủ chức năng điều chỉnh âm thanh.
  */
 public class SettingsScene {
     private Scene scene;

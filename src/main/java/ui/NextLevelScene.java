@@ -18,7 +18,7 @@ import sound.SoundManager;
 
 
 /**
- * Màn hình chuyển level - Hiển thị thông tin và có animation
+ * Màn hình chuyển level - Hiển thị thông tin và có animation.
  */
 public class NextLevelScene {
     private Scene scene;

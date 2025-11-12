@@ -19,6 +19,7 @@ public abstract class Brick extends GameObject {
     //load hình ảnh
     protected Image brickImage;
     protected boolean useImage = false; //element check
+
     /**
      * constructor gạch
      *
@@ -77,6 +78,7 @@ public abstract class Brick extends GameObject {
 
     /**
      * Kiểm tra xem gạch này có thể bị phá không, dùng để phân biệt vs unbreakable brick
+     *
      * @return true nếu có thể phá
      */
     public boolean canBeDestroyed() {
@@ -101,6 +103,7 @@ public abstract class Brick extends GameObject {
 
     /**
      * Trả về điểm số khi phá gạch này
+     *
      * @return điểm số
      */
     public abstract int getScore();

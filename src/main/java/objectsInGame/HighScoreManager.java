@@ -63,6 +63,7 @@ public class HighScoreManager {
 
     /**
      * Cập nhật high score nếu score mới cao hơn
+     *
      * @param newScore điểm mới
      * @return true nếu đạt high score mới
      */

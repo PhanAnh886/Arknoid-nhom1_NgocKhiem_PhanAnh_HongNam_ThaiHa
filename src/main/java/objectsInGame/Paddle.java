@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import objectsInGame.bricks.*;
 
 /**
- * class paddle
+ * class paddle.
  */
 public class Paddle extends MovableObject {
     private double minX = 0, maxX = 800; // giới hạn (cập nhật từ GameControl)
@@ -23,7 +23,7 @@ public class Paddle extends MovableObject {
     private boolean useImage = true; //có dùng hình ảnh ko
 
     /**
-     * constructor paddle truyền tham số
+     * constructor paddle truyền tham số.
      *
      * @param x      hoành độ
      * @param y      tung độ
@@ -36,7 +36,7 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * Load hình ảnh paddle từ ImageCache
+     * Load hình ảnh paddle từ ImageCache.
      */
     private void loadImage() {
         try {
@@ -51,7 +51,7 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * Tăng cấp độ kích thước paddle
+     * Tăng cấp độ kích thước paddle.
      */
     public void increaseSizeLevel() {
         if (sizeLevel < 3) { // Max level = 3
@@ -61,7 +61,7 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * Reset về kích thước bình thường
+     * Reset về kích thước bình thường.
      */
     public void resetSizeLevel() {
         sizeLevel = 0;
@@ -69,7 +69,7 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * Cập nhật chiều rộng paddle theo level
+     * Cập nhật chiều rộng paddle theo level.
      */
     private void updatePaddleWidth() {
         double oldWidth = width;
@@ -94,14 +94,14 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * Lấy level hiện tại
+     * Lấy level hiện tại.
      */
     public int getSizeLevel() {
         return sizeLevel;
     }
 
     /**
-     * cập nhập paddle(mới tạo cho có chứ ch cho nhận hành động từ chuột, phím)
+     * cập nhập paddle(mới tạo cho có chứ ch cho nhận hành động từ chuột, phím).
      *
      */
     public void update() {
@@ -111,7 +111,7 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * vẽ lên màn hình
+     * vẽ lên màn hình.
      *
      * @param gc công cụ vẽ lên canvas
      */
@@ -148,7 +148,7 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * hàm truyền giới hạn cho paddle (chưa sử dụng)
+     * hàm truyền giới hạn cho paddle (chưa sử dụng).
      *
      * @param minX bên trái
      * @param maxX bên phải
@@ -159,7 +159,7 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * method reset paddle đc gọi đông thời khi method ballLose đc gọi
+     * method reset paddle đc gọi đông thời khi method ballLose đc gọi.
      *
      * @param ballLose hàm boolean ballose khi đc gọi thì luôn trả về true
      */

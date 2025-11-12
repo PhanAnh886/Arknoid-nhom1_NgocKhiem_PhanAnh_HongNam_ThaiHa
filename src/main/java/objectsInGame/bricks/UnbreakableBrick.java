@@ -1,8 +1,10 @@
 package objectsInGame.bricks;
+
 import objectsInGame.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import sound.SoundManager;
+
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -20,7 +22,7 @@ public class UnbreakableBrick extends Brick {
         SoundManager.getInstance().playGameSound("brick_break_metal");
 
         // Không cho phép phá gạch này
-        super.destroyed(false,bricks);
+        super.destroyed(false, bricks);
     }
 
     @Override

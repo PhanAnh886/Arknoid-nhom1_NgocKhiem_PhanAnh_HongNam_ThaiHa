@@ -34,6 +34,11 @@ public abstract class PowerUp extends MovableObject {
         this.type = type;
     }
 
+    /**
+     * update cho powerup
+     *
+     * @param dt chia ra cho 60 frame trong 1s
+     */
     @Override
     public void update(double dt) {
         if (active) {

@@ -1,7 +1,9 @@
 package Level;
+
 import objectsInGame.*;
 import objectsInGame.bricks.*;
 import objectsInGame.powerups.*;
+
 import java.util.concurrent.CopyOnWriteArrayList;
 
 

@@ -2,8 +2,10 @@ package objectsInGame.bricks;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import sound.SoundManager;
 
 /**
@@ -18,13 +20,13 @@ public class ExplosiveBrick extends Brick {
     }
 
     @Override
-    public void destroyed(boolean value, CopyOnWriteArrayList<Brick> bricks){
+    public void destroyed(boolean value, CopyOnWriteArrayList<Brick> bricks) {
         if (value) { // nếu true thì ổ explosive trc xong nổ các brick xung quanh sau
             SoundManager.getInstance().playGameSound("brick_break_normal");
-            super.destroyed(true,bricks);
+            super.destroyed(true, bricks);
             explode(bricks);
-        } else{// kết thúc nổ lan
-            super.destroyed(false,bricks);
+        } else {// kết thúc nổ lan
+            super.destroyed(false, bricks);
         }
     }
 
@@ -46,6 +48,7 @@ public class ExplosiveBrick extends Brick {
 
     /**
      * Phá các gạch xung quanh khi gạch này bị phá
+     *
      * @param bricks danh sách tất cả gạch
      */
     public void explode(CopyOnWriteArrayList<Brick> bricks) {
@@ -67,7 +70,7 @@ public class ExplosiveBrick extends Brick {
 
                 // Nếu trong bán kính nổ thì phá
                 if (distance <= EXPLOSION_RADIUS) {
-                    brick.destroyed(true,bricks); // có thể nổ lan
+                    brick.destroyed(true, bricks); // có thể nổ lan
                 }
             }
         }

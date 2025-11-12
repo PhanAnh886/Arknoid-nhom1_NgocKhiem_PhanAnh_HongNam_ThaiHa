@@ -1,9 +1,12 @@
 package objectsInGame.bricks;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import objectsInGame.ImageCache;
+
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import sound.SoundManager;
 
 /**
@@ -58,13 +61,13 @@ public class StrongBrick extends Brick {
             SoundManager.getInstance().playGameSound("brick_break_normal");
 
             if (hitPoints <= 0) {
-                super.destroyed(true,bricks);
+                super.destroyed(true, bricks);
             } else {
                 // CẬP NHẬT ẢNH KHI BỊ HIT
                 updateImage();
             }
         } else {// nếu set là false thì trả về false và luôn set hitPoints trong trạng thái max
-            super.destroyed(false,bricks);
+            super.destroyed(false, bricks);
             this.hitPoints = maxHitPoints;
             updateImage();
         }

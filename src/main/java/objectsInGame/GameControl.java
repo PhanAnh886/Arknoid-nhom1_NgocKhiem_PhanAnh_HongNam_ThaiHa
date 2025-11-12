@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 /**
  * Class điều khiển game chính - ĐÃ TỐI ƯU ĐA LUỒNG
- *
+ * <p>
  * Các cải tiến:
  * 1. Sử dụng CopyOnWriteArrayList để thread-safe
  * 2. Parallel streams cho collision detection
@@ -144,7 +144,7 @@ public class GameControl extends Pane {
                 paddle.setX(mouseX - paddle.getWidth() / 2);
 
                 // nếu bóng chưa phóng thì đi theo luôn
-                balls.parallelStream().forEach(ball ->{ // làm nhiều việc cùng lúc
+                balls.parallelStream().forEach(ball -> { // làm nhiều việc cùng lúc
                     if (!ball.isLaunched()) {
                         ball.setX(mouseX - ball.getWidth() / 2);
                         //giới hạn ball khi paddle chạm biên ở cả hai đầu
@@ -311,7 +311,7 @@ public class GameControl extends Pane {
 
         //-------BULLETS------
         // Cập nhật đạn
-        bullets.parallelStream().forEach(bullet ->  {
+        bullets.parallelStream().forEach(bullet -> {
             bullet.update(dt); //là override nên ko bao gồm xóa brick nên phải có duyệt+xóa brick ở dưới
 
             // Kiểm tra va chạm đạn vs gạch

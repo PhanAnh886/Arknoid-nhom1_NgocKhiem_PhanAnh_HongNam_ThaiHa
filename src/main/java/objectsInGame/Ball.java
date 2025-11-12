@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import objectsInGame.bricks.*;
 import javafx.scene.effect.DropShadow;
+
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -105,6 +106,7 @@ public class Ball extends MovableObject {
         double cy = y + height / 2;
         double r = width / 2;
         // lấy vị trí gần tâm x,y nhất
+        //kẹp giói hạn min là cạnh trái max là cạnh phải
         double closestX = Math.max(brick.getX(), Math.min(cx, brick.getX() + brick.getWidth()));
         double closestY = Math.max(brick.getY(), Math.min(cy, brick.getY() + brick.getHeight()));
         // khoảng cách đến điểm gần nhất
@@ -159,13 +161,14 @@ public class Ball extends MovableObject {
             for (Brick brick : bricks) {
                 //ball chỉ chạm bóng khi isDestroyed là true(ko tính các loại gạch đặc biệt)
                 if (!brick.isDestroyed() && intersects(brick)) {
+                    //kẹp giói hạn min là cạnh trái max là cạnh phải
                     double overlapX = Math.min(x + width - brick.getX(), brick.getX() + brick.getWidth() - x);
                     double overlapY = Math.min(y + height - brick.getY(), brick.getY() + brick.getHeight() - y);
 
                     if (overlapX < overlapY) bounceX();
                     else bounceY();
 
-                    brick.destroyed(true,bricks);
+                    brick.destroyed(true, bricks);
                     break;
                 }
             }

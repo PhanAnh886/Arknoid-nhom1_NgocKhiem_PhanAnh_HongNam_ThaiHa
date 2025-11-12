@@ -1,6 +1,6 @@
 package javagraphicmain;
 
-import javafx.application.Application ;  // Lớp khởi động JavaFX
+import javafx.application.Application;  // Lớp khởi động JavaFX
 import javafx.scene.Scene;              // Màn cảnh hiển thị
 import javafx.stage.Stage;              // Cửa sổ chính của ứng dụng
 import sound.SoundManager;
@@ -9,7 +9,7 @@ import ui.*;
 
 /**
  * bắt đầu chương trình
- *phan anh
+ * phan anh
  */
 public class Main extends Application {
     private Stage primaryStage; //stage chính của cả chương trình, nơi các scene được trình chiếu
@@ -27,7 +27,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {//override from a method available
-                                                     // in class Application
+        // in class Application
         this.primaryStage = stage; //lưu stage vào biến của class
         primaryStage.setTitle("Arkanoid");
 
@@ -39,6 +39,7 @@ public class Main extends Application {
     }
 
     //--------------METHODS INTERACT WITH EACH OTHER VIA BUTTON DEFINED BY  SCENE CLASSES IN UI PACKAGE------------
+
     /**
      * Hiển thị menu chính
      */
@@ -95,9 +96,10 @@ public class Main extends Application {
 
     /**
      * Hiển thị mà hình next level khi win 1 level
+     *
      * @param currentLevel level hiện tại
-     * @param score điểm
-     * @param lives mạng
+     * @param score        điểm
+     * @param lives        mạng
      */
     public void showNextLevel(int currentLevel, int score, int lives) {
         NextLevelScene nextLevelScene = new NextLevelScene(this, currentLevel, score, lives);
@@ -153,6 +155,7 @@ public class Main extends Application {
         // khởi chạy JavaFX
         launch(args);
     }
+
     @Override
     public void stop() {
         // Cleanup khi thoát game
