@@ -21,7 +21,9 @@ public abstract class Brick extends GameObject {
 <<<<<<< HEAD
     protected boolean useImage = false; //element check
 
+=======
     protected boolean useImage = false; //element check.
+>>>>>>> 029424d0357d73b2758c8b869a52cc700f771e56
     /**
      * constructor gạch.
      *
