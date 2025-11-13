@@ -129,7 +129,7 @@ public class SoundManager {
         }
     }
 
-    // ==================== PLAY METHODS ====================
+    //PLAY METHODS
 
     /**
      * Play sound effect (UI sounds)
