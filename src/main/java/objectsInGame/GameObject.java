@@ -1,17 +1,17 @@
 package objectsInGame;
 
-import javafx.scene.canvas.GraphicsContext; //vẽ hình, màu, text lên Canvas
+import javafx.scene.canvas.GraphicsContext; //vẽ hình, màu, text lên Canvas.
 import objectsInGame.bricks.*;
 
 /**
- * class chung cho mọi object
+ * class chung cho mọi object.
  */
 public abstract class GameObject {
-    protected double x, y;        // Tọa độ
-    protected double width, height; // Kích thước
+    protected double x, y;        // Tọa độ.
+    protected double width, height; // Kích thước.
 
     /**
-     * constructor chung cho object
+     * constructor chung cho object.
      *
      * @param x
      * @param y
@@ -26,23 +26,23 @@ public abstract class GameObject {
     }
 
     /**
-     * cập nhật trnagj thái
+     * cập nhật trnagj thái.
      *
-     * @param dt 1/60
+     * @param dt 1/60.
      */
     public void update(double dt) {
     }
 
     /**
-     * hàm vẽ chung
+     * hàm vẽ chung.
      */
     public abstract void render(GraphicsContext gc);
 
     /**
-     * hàm xử lý va chạm
+     * hàm xử lý va chạm.
      *
-     * @param other vật bị va chạm với this object
-     * @return trạng thái đã va chạm hay chưa
+     * @param other vật bị va chạm với this object.
+     * @return trạng thái đã va chạm hay chưa.
      */
     public boolean intersects(GameObject other) {
         return this.x < other.x + other.width &&
@@ -51,7 +51,7 @@ public abstract class GameObject {
                 this.y + this.height > other.y;
     }
 
-    // getter + setter
+    // getter + setter.
     public double getX() {
         return x;
     }

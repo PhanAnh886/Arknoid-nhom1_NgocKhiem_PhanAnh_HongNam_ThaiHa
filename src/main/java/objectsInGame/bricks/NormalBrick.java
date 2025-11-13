@@ -8,7 +8,7 @@ import sound.SoundManager;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Gạch thường - phá được bằng 1 hit
+ * Gạch thường - phá được bằng 1 hit.
  */
 public class NormalBrick extends Brick {
     public NormalBrick(double x, double y, double width, double height) {
@@ -19,7 +19,7 @@ public class NormalBrick extends Brick {
     @Override
     public void destroyed(boolean value, CopyOnWriteArrayList<Brick> bricks) {
         if (value) {
-            // Phát âm thanh khi phá gạch
+            // Phát âm thanh khi phá gạch.
             SoundManager.getInstance().playGameSound("brick_break_normal");
         }
         super.destroyed(value, bricks);
@@ -32,7 +32,7 @@ public class NormalBrick extends Brick {
                 // vẽ bằng hình ảnh
                 gc.drawImage(brickImage, x, y, width, height);
             } else {
-                // dự phòng khi ko vẽ đc bằng hình ảnh
+                // dự phòng khi ko vẽ đc bằng hình ảnh.
                 gc.setFill(Color.FORESTGREEN);
                 gc.fillRect(x, y, width, height);
                 gc.setStroke(Color.DARKGREEN);
@@ -43,7 +43,7 @@ public class NormalBrick extends Brick {
 
     @Override
     public int getScore() {
-        return 10; // 10 điểm cho gạch thường
+        return 10; // 10 điểm cho gạch thường.
     }
 }
 

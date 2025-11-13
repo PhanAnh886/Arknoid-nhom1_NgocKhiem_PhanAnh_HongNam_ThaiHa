@@ -4,14 +4,14 @@ import javafx.scene.canvas.GraphicsContext;
 import objectsInGame.MovableObject;
 
 public abstract class PowerUp extends MovableObject {
-    private boolean active = false; //activw này là cho phép rơi xuống chứ ko phải apply tác dụng
-    private String type; // loại power up
+    private boolean active = false; //activw này là cho phép rơi xuống chứ ko phải apply tác dụng.
+    private String type; // loại power up.
 
     public PowerUp(String type) {
-        super(0, 0, 20, 20); // tạm thời, vị trí sẽ được set khi brick bị phá
+        super(0, 0, 20, 20); // tạm thời, vị trí sẽ được set khi brick bị phá.
         this.type = type;
         this.setDx(0);
-        this.setDy(150); // tốc độ rơi
+        this.setDy(150); // tốc độ rơi.
     }
 
     public void activate() {

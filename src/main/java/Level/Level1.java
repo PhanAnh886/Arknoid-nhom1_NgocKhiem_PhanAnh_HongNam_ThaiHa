@@ -6,8 +6,8 @@ import objectsInGame.powerups.*;
 import java.util.Random;
 
 /**
- * Level 1 - Heart Pattern
- * Hình trái tim hồng với viền xám
+ * Level 1 - Heart Pattern.
+ * Hình trái tim hồng với viền xám.
  */
 public class Level1 extends Level {
 
@@ -63,7 +63,7 @@ public class Level1 extends Level {
                         break;
                 }
 
-                // 15% cơ hội có power-up
+                // 15% cơ hội có power-up.
                 if (brick != null && brick.canBeDestroyed() && rand.nextDouble() < 0.15) {
                     int powerType = rand.nextInt(4);
                     PowerUp powerUp = null;

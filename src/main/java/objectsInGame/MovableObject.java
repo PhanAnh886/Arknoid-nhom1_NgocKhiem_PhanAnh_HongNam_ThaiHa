@@ -4,28 +4,28 @@ import javafx.scene.canvas.GraphicsContext;
 import objectsInGame.bricks.*;
 
 /**
- * class chung cho toàn bộ object di chuyển đc
+ * class chung cho toàn bộ object di chuyển đc.
  */
 public abstract class MovableObject extends GameObject {
     protected double dx;
-    protected double dy; // vận tốc
+    protected double dy; // vận tốc.
 
     /**
-     * constructor chung
+     * constructor chung.
      *
-     * @param x      hoành độ
-     * @param y      tung độ
-     * @param width  chiều dài
-     * @param height chiều cao
+     * @param x      hoành độ.
+     * @param y      tung độ.
+     * @param width  chiều dài.
+     * @param height chiều cao.
      */
     public MovableObject(double x, double y, double width, double height) {
         super(x, y, width, height);
     }
 
     /**
-     * cập nhật vị trí theo vận tốc
+     * cập nhật vị trí theo vận tốc.
      *
-     * @param dt chia ra cho 60 frame trong 1s
+     * @param dt chia ra cho 60 frame trong 1s.
      */
     @Override
     public void update(double dt) {
@@ -34,10 +34,10 @@ public abstract class MovableObject extends GameObject {
     }
 
     /**
-     * set tốc độ
+     * set tốc độ.
      *
-     * @param vx theo x
-     * @param vy theo y
+     * @param vx theo x.
+     * @param vy theo y.
      */
     public void setVelocity(double vx, double vy) {
         this.dx = vx;

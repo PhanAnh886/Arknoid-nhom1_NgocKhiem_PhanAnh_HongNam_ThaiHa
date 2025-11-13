@@ -69,26 +69,26 @@ public class GameOverScene {
         }
 
         if (bgImage != null) {
-            // 2. Định nghĩa kích thước nền (800x600, bằng kích thước Scene)
+            // 2. Định nghĩa kích thước nền (800x600, bằng kích thước Scene).
             BackgroundSize bgSize = new BackgroundSize(
-                    800, 800, // Chiều rộng và cao của ảnh
-                    false, false, // Không tính theo %
-                    false, false  // Không "cover" (che phủ) hay "contain" (vừa vặn)
+                    800, 800, // Chiều rộng và cao của ảnh.
+                    false, false, // Không tính theo %.
+                    false, false  // Không "cover" (che phủ) hay "contain" (vừa vặn).
             );
 
-            // 3. Tạo BackgroundImage
+            // 3. Tạo BackgroundImage.
             BackgroundImage backgroundImage = new BackgroundImage(
                     bgImage,
-                    BackgroundRepeat.NO_REPEAT, // Không lặp lại ảnh
+                    BackgroundRepeat.NO_REPEAT, // Không lặp lại ảnh.
                     BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.DEFAULT,  // ko căn, lấy từ góc trên ảnh ở giưã
-                    bgSize                      // Dùng kích thước đã định nghĩa
+                    BackgroundPosition.DEFAULT,  // ko căn, lấy từ góc trên ảnh ở giưã.
+                    bgSize                      // Dùng kích thước đã định nghĩa.
             );
 
-            // 4. Set nền mới cho layout
+            // 4. Set nền mới cho layout.
             layout.setBackground(new Background(backgroundImage));
         } else {
-            // Dự phòng nếu không tải được ảnh
+            // Dự phòng nếu không tải được ảnh.
             layout.setBackground(new Background(new BackgroundFill(
                     Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
         }
@@ -102,22 +102,22 @@ public class GameOverScene {
         button.setPrefWidth(300);
         button.setPrefHeight(50);
 
-        // Style cơ bản - Vàng, vuông, có bóng
+        // Style cơ bản - Vàng, vuông, có bóng.
         button.setStyle(
-                "-fx-background-color: #FFD700; " +           // Màu vàng
-                        "-fx-text-fill: #000000; " +                  // Chữ đen
-                        "-fx-background-radius: 0; " +                // Không bo tròn (vuông)
-                        "-fx-border-radius: 0; " +                    // Viền vuông
+                "-fx-background-color: #FFD700; " +           // Màu vàng.
+                        "-fx-text-fill: #000000; " +                  // Chữ đen.
+                        "-fx-background-radius: 0; " +                // Không bo tròn (vuông).
+                        "-fx-border-radius: 0; " +                    // Viền vuông.
                         "-fx-cursor: hand; " +
                         "-fx-font-weight: bold; " +
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 3, 3);" // Bóng đổ
         );
 
-        // Hiệu ứng hover - Sáng hơn + bóng lớn hơn + bounce
+        // Hiệu ứng hover - Sáng hơn + bóng lớn hơn + bounce.
         button.setOnMouseEntered(e -> {
             soundManager.playSound("button_hover");
 
-            // Tạo hiệu ứng bounce (phóng to)
+            // Tạo hiệu ứng bounce (phóng to).
             javafx.animation.ScaleTransition st = new javafx.animation.ScaleTransition(
                     javafx.util.Duration.millis(100), button
             );
@@ -126,19 +126,19 @@ public class GameOverScene {
             st.play();
 
             button.setStyle(
-                    "-fx-background-color: #FFC700; " +       // Vàng sáng hơn
+                    "-fx-background-color: #FFC700; " +       // Vàng sáng hơn.
                             "-fx-text-fill: #000000; " +
                             "-fx-background-radius: 0; " +
                             "-fx-border-radius: 0; " +
                             "-fx-cursor: hand; " +
                             "-fx-font-weight: bold; " +
-                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 15, 0, 5, 5);" // Bóng to hơn
+                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 15, 0, 5, 5);" // Bóng to hơn.
             );
         });
 
-        // Hiệu ứng mouse exit - Trở về bình thường
+        // Hiệu ứng mouse exit - Trở về bình thường.
         button.setOnMouseExited(e -> {
-            // Trả về kích thước ban đầu
+            // Trả về kích thước ban đầu.
             javafx.animation.ScaleTransition st = new javafx.animation.ScaleTransition(
                     javafx.util.Duration.millis(100), button
             );
@@ -157,7 +157,7 @@ public class GameOverScene {
             );
         });
 
-        // Hiệu ứng khi click - Nhấn xuống
+        // Hiệu ứng khi click - Nhấn xuống.
         button.setOnMousePressed(e -> {
             javafx.animation.ScaleTransition st = new javafx.animation.ScaleTransition(
                     javafx.util.Duration.millis(50), button

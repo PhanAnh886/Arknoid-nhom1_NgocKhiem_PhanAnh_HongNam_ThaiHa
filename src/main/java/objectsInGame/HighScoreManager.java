@@ -3,8 +3,8 @@ package objectsInGame;
 import java.io.*;
 
 /**
- * Quản lý High Score
- * Singleton pattern để đảm bảo chỉ có 1 instance
+ * Quản lý High Score.
+ * Singleton pattern để đảm bảo chỉ có 1 instance.
  */
 public class HighScoreManager {
     private static HighScoreManager instance;
@@ -24,7 +24,7 @@ public class HighScoreManager {
     }
 
     /**
-     * Load high score từ file
+     * Load high score từ file.
      */
     private void loadHighScore() {
         try {
@@ -48,7 +48,7 @@ public class HighScoreManager {
     }
 
     /**
-     * Lưu high score vào file
+     * Lưu high score vào file.
      */
     private void saveHighScore() {
         try {
@@ -62,10 +62,16 @@ public class HighScoreManager {
     }
 
     /**
+<<<<<<< HEAD
      * Cập nhật high score nếu score mới cao hơn
      *
      * @param newScore điểm mới
      * @return true nếu đạt high score mới
+=======
+     * Cập nhật high score nếu score mới cao hơn.
+     * @param newScore điểm mới.
+     * @return true nếu đạt high score mới.
+>>>>>>> 029424d0357d73b2758c8b869a52cc700f771e56
      */
     public boolean updateHighScore(int newScore) {
         if (newScore > highScore) {
@@ -77,14 +83,14 @@ public class HighScoreManager {
     }
 
     /**
-     * Lấy high score hiện tại
+     * Lấy high score hiện tại.
      */
     public int getHighScore() {
         return highScore;
     }
 
     /**
-     * Reset high score về 0
+     * Reset high score về 0.
      */
     public void resetHighScore() {
         highScore = 0;

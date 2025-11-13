@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Cache hình ảnh để tránh load lại liên tục
- * Singleton pattern - chỉ có 1 instance duy nhất
+ * Cache hình ảnh để tránh load lại liên tục.
+ * Singleton pattern - chỉ có 1 instance duy nhất.
  */
 public class ImageCache {
     private static ImageCache instance;
@@ -19,7 +19,7 @@ public class ImageCache {
     }
 
     /**
-     * Lấy instance duy nhất
+     * Lấy instance duy nhất.
      */
     public static ImageCache getInstance() {
         if (instance == null) {
@@ -29,18 +29,18 @@ public class ImageCache {
     }
 
     /**
-     * Load trước TẤT CẢ hình ảnh khi game khởi động
+     * Load trước TẤT CẢ hình ảnh khi game khởi động.
      */
     private void preloadAllImages() {
         System.out.println("=== Preloading all images ===");
 
-        // Ball
+        // Ball.
         loadImage("/image/ball/ball.peach.png");
 
-        // Paddle
+        // Paddle.
         loadImage("/image/paddle/stick_2.png");
 
-        // Bricks
+        // Bricks.
         loadImage("/image/bricks/normalBrick.png");
         loadImage("/image/bricks/exploseBrick.png");
         loadImage("/image/bricks/unbreakableBrick.png");
@@ -48,7 +48,7 @@ public class ImageCache {
         loadImage("/image/bricks/hardenBrick2HitLeft.png");
         loadImage("/image/bricks/hardenBrick3HitLeft.png");
 
-        // Backgrounds
+        // Backgrounds.
         loadImage("/image/inGame/inGame.png");
         loadImage("/image/Menu/Menu.png");
         loadImage("/image/menuBranchs/menuBranch.png");
@@ -58,7 +58,7 @@ public class ImageCache {
     }
 
     /**
-     * Load 1 hình ảnh vào cache
+     * Load 1 hình ảnh vào cache.
      */
     private void loadImage(String path) {
         try {
@@ -73,12 +73,12 @@ public class ImageCache {
     }
 
     /**
-     * Lấy hình ảnh từ cache (NHANH)
+     * Lấy hình ảnh từ cache (NHANH).
      */
     public Image getImage(String path) {
         Image img = imageMap.get(path);
         if (img == null) {
-            // Nếu chưa có trong cache, load ngay
+            // Nếu chưa có trong cache, load ngay.
             loadImage(path);
             img = imageMap.get(path);
         }
@@ -86,14 +86,14 @@ public class ImageCache {
     }
 
     /**
-     * Kiểm tra xem có hình ảnh trong cache không
+     * Kiểm tra xem có hình ảnh trong cache không.
      */
     public boolean hasImage(String path) {
         return imageMap.containsKey(path) && imageMap.get(path) != null;
     }
 
     /**
-     * Clear cache (dùng khi cần giải phóng bộ nhớ)
+     * Clear cache (dùng khi cần giải phóng bộ nhớ).
      */
     public void clear() {
         imageMap.clear();

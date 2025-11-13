@@ -20,15 +20,15 @@ public class Paddle extends MovableObject {
 
     // === HÌNH ẢNH ===
     private Image paddleImage;
-    private boolean useImage = true; //có dùng hình ảnh ko
+    private boolean useImage = true; //có dùng hình ảnh ko.
 
     /**
      * constructor paddle truyền tham số.
      *
-     * @param x      hoành độ
-     * @param y      tung độ
-     * @param width  độ dài
-     * @param height chiều cao
+     * @param x      hoành độ.
+     * @param y      tung độ.
+     * @param width  độ dài.
+     * @param height chiều cao.
      */
     public Paddle(double x, double y, double width, double height) {
         super(x, y, width, height);
@@ -54,7 +54,7 @@ public class Paddle extends MovableObject {
      * Tăng cấp độ kích thước paddle.
      */
     public void increaseSizeLevel() {
-        if (sizeLevel < 3) { // Max level = 3
+        if (sizeLevel < 3) { // Max level = 3.
             sizeLevel++;
             updatePaddleWidth();
         }
@@ -89,7 +89,7 @@ public class Paddle extends MovableObject {
                 break;
         }
 
-        // Giữ nguyên vị trí trung tâm của paddle
+        // Giữ nguyên vị trí trung tâm của paddle.
         x += (oldWidth - width) / 2;
     }
 
@@ -105,7 +105,7 @@ public class Paddle extends MovableObject {
      *
      */
     public void update() {
-        // giới hạn trong khung
+        // giới hạn trong khung.
         if (x < minX) x = minX;
         if (x + width > maxX) x = maxX - width;
     }
@@ -113,7 +113,7 @@ public class Paddle extends MovableObject {
     /**
      * vẽ lên màn hình.
      *
-     * @param gc công cụ vẽ lên canvas
+     * @param gc công cụ vẽ lên canvas.
      */
     @Override
     public void render(GraphicsContext gc) {
@@ -122,8 +122,8 @@ public class Paddle extends MovableObject {
             gc.drawImage(paddleImage, x, y, width, height);
 
         } else {
-            // DỰ PHÒNG: Vẽ bằng màu nếu không có ảnh
-            // Màu thay đổi theo level
+            // DỰ PHÒNG: Vẽ bằng màu nếu không có ảnh.
+            // Màu thay đổi theo level.
             switch (sizeLevel) {
                 case 0:
                     gc.setFill(Color.DARKBLUE);
@@ -150,8 +150,8 @@ public class Paddle extends MovableObject {
     /**
      * hàm truyền giới hạn cho paddle (chưa sử dụng).
      *
-     * @param minX bên trái
-     * @param maxX bên phải
+     * @param minX bên trái.
+     * @param maxX bên phải.
      */
     public void setBounds(double minX, double maxX) {
         this.minX = minX;
@@ -161,7 +161,7 @@ public class Paddle extends MovableObject {
     /**
      * method reset paddle đc gọi đông thời khi method ballLose đc gọi.
      *
-     * @param ballLose hàm boolean ballose khi đc gọi thì luôn trả về true
+     * @param ballLose hàm boolean ballose khi đc gọi thì luôn trả về true.
      */
     public void resetPaddle(boolean ballLose) {
         if (ballLose) {

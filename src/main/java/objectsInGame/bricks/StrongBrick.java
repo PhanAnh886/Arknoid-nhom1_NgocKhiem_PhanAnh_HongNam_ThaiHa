@@ -10,10 +10,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import sound.SoundManager;
 
 /**
- * Gạch cứng - cần nhiều lần hit mới phá
+ * Gạch cứng - cần nhiều lần hit mới phá.
  */
 public class StrongBrick extends Brick {
-    private int hitPoints; // Số lần hit còn lại
+    private int hitPoints; // Số lần hit còn lại.
     private int maxHitPoints;
 
     // Cache 3 trạng thái ảnh
@@ -27,7 +27,7 @@ public class StrongBrick extends Brick {
         this.hitPoints = hitPoints;
         this.maxHitPoints = hitPoints;
 
-        // Load ảnh 1 LẦN DUY NHẤT cho tất cả StrongBrick
+        // Load ảnh 1 LẦN DUY NHẤT cho tất cả StrongBrick.
         if (!imagesLoaded) {
             ImageCache cache = ImageCache.getInstance();
             img3Hits = cache.getImage("/image/bricks/hardenBrick3HitLeft.png");
@@ -40,7 +40,7 @@ public class StrongBrick extends Brick {
     }
 
     /**
-     * Cập nhật hình ảnh dựa trên hitPoints
+     * Cập nhật hình ảnh dựa trên hitPoints.
      */
     private void updateImage() {
         if (hitPoints == 3) {
@@ -55,7 +55,7 @@ public class StrongBrick extends Brick {
 
     @Override
     public void destroyed(boolean value, CopyOnWriteArrayList<Brick> bricks) {
-        //nếu set là true thì giảm hitPoints cho đến khi = 0 thì destroy(true)
+        //nếu set là true thì giảm hitPoints cho đến khi = 0 thì destroy(true).
         if (value) {
             hitPoints--;
             SoundManager.getInstance().playGameSound("brick_break_normal");
@@ -66,8 +66,13 @@ public class StrongBrick extends Brick {
                 // CẬP NHẬT ẢNH KHI BỊ HIT
                 updateImage();
             }
+<<<<<<< HEAD
         } else {// nếu set là false thì trả về false và luôn set hitPoints trong trạng thái max
             super.destroyed(false, bricks);
+=======
+        } else {// nếu set là false thì trả về false và luôn set hitPoints trong trạng thái max.
+            super.destroyed(false,bricks);
+>>>>>>> 029424d0357d73b2758c8b869a52cc700f771e56
             this.hitPoints = maxHitPoints;
             updateImage();
         }
@@ -79,7 +84,7 @@ public class StrongBrick extends Brick {
             if (useImage && brickImage != null) {
                 gc.drawImage(brickImage, x, y, width, height);
             } else {
-                // Dự phòng
+                // Dự phòng.
                 gc.setFill(Color.FORESTGREEN);
                 gc.fillRect(x, y, width, height);
                 gc.setStroke(Color.DARKGREEN);

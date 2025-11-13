@@ -6,8 +6,8 @@ import objectsInGame.powerups.*;
 import java.util.Random;
 
 /**
- * Level 2 - Colorful Columns Pattern
- * Các cột màu sắc khác nhau với viền đỏ
+ * Level 2 - Colorful Columns Pattern.
+ * Các cột màu sắc khác nhau với viền đỏ.
  */
 public class Level2 extends Level {
 
@@ -22,9 +22,9 @@ public class Level2 extends Level {
         double startX = 35;
         double startY = 40;
 
-        // Pattern cột (12x10 grid)
+        // Pattern cột (12x10 grid).
         // 1 = Unbreakable (border), 2 = Strong(2hits), 3 = Strong(3hits),
-        // 4 = Explosive, 5 = Normal
+        // 4 = Explosive, 5 = Normal.
         int[][] pattern = {
                 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
                 {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -66,7 +66,7 @@ public class Level2 extends Level {
                         break;
                 }
 
-                // 15% cơ hội có power-up
+                // 15% cơ hội có power-up.
                 if (brick != null && brick.canBeDestroyed() && rand.nextDouble() < 0.15) {
                     int powerType = rand.nextInt(3);
                     PowerUp powerUp = null;

@@ -9,19 +9,21 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
- * class gạch
+ * class gạch.
  */
 public abstract class Brick extends GameObject {
     protected boolean destroyed = false;
     protected boolean scored = false;
-    protected PowerUp powerUp; // brick có thể chứa PowerUp
+    protected PowerUp powerUp; // brick có thể chứa PowerUp.
 
-    //load hình ảnh
+    //load hình ảnh.
     protected Image brickImage;
+<<<<<<< HEAD
     protected boolean useImage = false; //element check
 
+    protected boolean useImage = false; //element check.
     /**
-     * constructor gạch
+     * constructor gạch.
      *
      * @param x      hoành độ
      * @param y      tung độ
@@ -33,7 +35,7 @@ public abstract class Brick extends GameObject {
     }
 
     /**
-     * Load hình ảnh từ ImageCache
+     * Load hình ảnh từ ImageCache.
      */
     protected void loadImage(String imagePath) {
         try {
@@ -50,7 +52,7 @@ public abstract class Brick extends GameObject {
     }
 
     /**
-     * method destroy the brick
+     * method destroy the brick.
      *
      * @param value trạng thái
      */
@@ -59,16 +61,16 @@ public abstract class Brick extends GameObject {
     }
 
     /**
-     * method kiểm tra trạng thái ã tính điểm cho cục brick này chưa
+     * method kiểm tra trạng thái ã tính điểm cho cục brick này chưa.
      *
-     * @return dã check điểm chưa
+     * @return dã check điểm chưa.
      */
     public boolean isScored() {
         return scored;
     }
 
     /**
-     * method thay đổi trạng thái đã check điểm ch(thường truyền vào true để ko tính điểm nx)
+     * method thay đổi trạng thái đã check điểm ch(thường truyền vào true để ko tính điểm nx).
      *
      * @param value true/false
      */
@@ -77,9 +79,14 @@ public abstract class Brick extends GameObject {
     }
 
     /**
+<<<<<<< HEAD
      * Kiểm tra xem gạch này có thể bị phá không, dùng để phân biệt vs unbreakable brick
      *
      * @return true nếu có thể phá
+=======
+     * Kiểm tra xem gạch này có thể bị phá không, dùng để phân biệt vs unbreakable brick.
+     * @return true nếu có thể phá.
+>>>>>>> 029424d0357d73b2758c8b869a52cc700f771e56
      */
     public boolean canBeDestroyed() {
         return true;
@@ -102,16 +109,21 @@ public abstract class Brick extends GameObject {
     }
 
     /**
+<<<<<<< HEAD
      * Trả về điểm số khi phá gạch này
      *
      * @return điểm số
+=======
+     * Trả về điểm số khi phá gạch này.
+     * @return điểm số.
+>>>>>>> 029424d0357d73b2758c8b869a52cc700f771e56
      */
     public abstract int getScore();
 
     /**
-     * hàm vẽ lên canvas
+     * hàm vẽ lên canvas.
      *
-     * @param gc dụng cụ vẽ
+     * @param gc dụng cụ vẽ.
      */
     @Override
     public abstract void render(GraphicsContext gc);

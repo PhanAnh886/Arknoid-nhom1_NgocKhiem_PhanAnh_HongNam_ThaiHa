@@ -6,7 +6,7 @@ import objectsInGame.powerups.*;
 import java.util.Random;
 
 /**
- * Level 0 - Demo Level (level cũ)
+ * Level 0 - Demo Level (level cũ).
  */
 public class Level0 extends Level {
 
@@ -59,7 +59,7 @@ public class Level0 extends Level {
                         break;
                 }
 
-                // 15% cơ hội có power-up (chỉ cho gạch có thể phá)
+                // 15% cơ hội có power-up (chỉ cho gạch có thể phá).
                 if (brick != null && brick.canBeDestroyed() && rand.nextDouble() < 0.15) {
                     int powerType = rand.nextInt(4);
                     PowerUp powerUp = null;
